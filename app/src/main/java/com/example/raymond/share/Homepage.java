@@ -16,9 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
-import com.facebook.ProfileTracker;
 
 public class Homepage extends AppCompatActivity {
 
@@ -136,16 +134,11 @@ public class Homepage extends AppCompatActivity {
 
         View menuHeader =  navigationView.getHeaderView(0);
 
-        GetUserId getUserId = new GetUserId();
-
         Profile profile = Profile.getCurrentProfile();
 
-
-        username = getUserId.getObject(getApplicationContext(), username);
         TextView nameView = (TextView) menuHeader.findViewById(R.id.username);
         nameView.setText(username);
 
-        email = getUserId.getObject(getApplicationContext(), email);
         TextView emailView = (TextView) menuHeader.findViewById(R.id.email);
         emailView.setText(email);
 
@@ -160,5 +153,4 @@ public class Homepage extends AppCompatActivity {
         intent.putExtra("imageUrl", imageUrl);
         startActivity(intent);
     }
-
 }
