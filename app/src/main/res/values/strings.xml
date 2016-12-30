@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Share</string>
+    <string name="facebook_app_id">189736388153843</string>
+    <string name="fb_login_protocol_scheme">fb189736388153843</string>
+    <string name="Facebook">Facebook</string>
+    <string name="title_activity_homepage">Homepage</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="openDrawer" />
+    <string name="closeDrawer" />
+</resources>
