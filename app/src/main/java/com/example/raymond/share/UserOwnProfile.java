@@ -40,34 +40,16 @@ public class UserOwnProfile extends AppCompatActivity {
         new DownloadImage ((ImageView)findViewById(R.id.profileImage)).execute(imageUrl);
 
         Button fbProfileBtn = (Button) findViewById(R.id.fbProfile);
-        fbProfileBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
-                String facebookUrl = getFacebookPageURL(getApplicationContext());
-                facebookIntent.setData(Uri.parse(facebookUrl));
-                startActivity(facebookIntent);
-            }
-        });
+//        fbProfileBtn.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//
+//                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+//                String facebookUrl = getFacebookPageURL(getApplicationContext());
+//                facebookIntent.setData(Uri.parse(facebookUrl));
+//                startActivity(facebookIntent);
+//            }
+//        });
     }
 
-    public String getFacebookPageURL(Context context) {
 
-        Profile userId = Profile.getCurrentProfile();
-
-        String FACEBOOK_PAGE_ID = userId.getId();
-        String FACEBOOK_URL = "https://www.facebook.com/" + FACEBOOK_PAGE_ID;
-
-        PackageManager packageManager = context.getPackageManager();
-        try {
-            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
-            if (versionCode >= 3002850) { //newer versions of fb app
-                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
-            } else { //older versions of fb app
-                return "fb://page/" + FACEBOOK_PAGE_ID;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            return FACEBOOK_URL; //normal web url
-        }
-    }
 }
