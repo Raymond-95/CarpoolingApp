@@ -2,13 +2,13 @@ package com.example.raymond.share;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.Profile;
+import com.example.raymond.share.model.User;
 
 public class Homepage extends AppCompatActivity {
 
@@ -27,9 +27,6 @@ public class Homepage extends AppCompatActivity {
     private ViewPagerAdapter viewPagerAdapter;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private static String username = "name";
-    private static String email = "email";
-    private static String imageUrl = "imageUrl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,23 +131,19 @@ public class Homepage extends AppCompatActivity {
 
         View menuHeader =  navigationView.getHeaderView(0);
 
-        Profile profile = Profile.getCurrentProfile();
+        User user = new User().getUserAccount(getApplicationContext());
 
         TextView nameView = (TextView) menuHeader.findViewById(R.id.username);
-        nameView.setText(username);
+        nameView.setText(user.getName());
 
         TextView emailView = (TextView) menuHeader.findViewById(R.id.email);
-        emailView.setText(email);
+        emailView.setText(user.getEmail());
 
-        imageUrl = profile.getProfilePictureUri(200,200).toString();
-        new DownloadImage((ImageView) menuHeader.findViewById(R.id.menu_profile_image)).execute(imageUrl);
+        new DownloadImage((ImageView) menuHeader.findViewById(R.id.menu_profile_image)).execute(user.getImageUrl());
     }
 
     public void profile(View v) {
         Intent intent = new Intent(getApplicationContext(), UserOwnProfile.class);
-        intent.putExtra("username", username);
-        intent.putExtra("email", email);
-        intent.putExtra("imageUrl", imageUrl);
         startActivity(intent);
     }
 }

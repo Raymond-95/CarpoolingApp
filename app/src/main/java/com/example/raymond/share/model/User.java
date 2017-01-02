@@ -33,7 +33,7 @@ public class User {
     public User(JSONObject response){
 
         try {
-            response = response.getJSONObject("data");
+            response = response.getJSONObject("result");
 
             try {
                 this.id = response.getInt("id");
