@@ -15,4 +15,5 @@
     <string name="openDrawer" />
     <string name="closeDrawer" />
     <string name="loading">loading</string>
+    <string name="title_activity_source">Map</string>
 </resources>
