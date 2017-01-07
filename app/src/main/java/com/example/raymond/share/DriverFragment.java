@@ -32,7 +32,7 @@ public class DriverFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), Source.class));
+                startActivity(new Intent(getActivity(), RegTrip.class));
             }
         });
 
