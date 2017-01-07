@@ -109,8 +109,6 @@ public class AutoComplete extends AppCompatActivity {
             // Building the url to the web service
             String url = "https://maps.googleapis.com/maps/api/place/autocomplete/" + output + "?" + parameters;
 
-            Log.e("ss", url);
-
             try {
                 // Fetching the data from web service in background
                 data = downloadUrl(url);

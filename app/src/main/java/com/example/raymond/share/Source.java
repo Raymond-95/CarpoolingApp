@@ -22,6 +22,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class Source extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -50,23 +54,26 @@ public class Source extends AppCompatActivity implements OnMapReadyCallback {
 
         source.addTextChangedListener(new TextWatcher() {
 
+            private final long DELAY = 2000; // milliseconds
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                autoComplete.setTextView(source);
-                autoComplete.setContext(getBaseContext());
-                autoComplete.startToAutoComplete(s.toString());
                 mMap.clear();
                 placeMarker();
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                autoComplete.setTextView(source);
+                autoComplete.setContext(getBaseContext());
+                autoComplete.startToAutoComplete(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(1);
+                ScheduledFuture sf = scheduledPool.schedule(runnabledelayedTask, DELAY, TimeUnit.MILLISECONDS);
             }
         });
 
@@ -92,21 +99,17 @@ public class Source extends AppCompatActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
         LatLng start = new LatLng(0, 0);
         mMap.addMarker(new MarkerOptions().position(start).title("Start here"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(start));
+        mMap.moveCamera(CameraUpdateFactory.zoomBy()
     }
 
     public void placeMarker() {
 
         String location = source.getText().toString();
         List<Address> addressList = null;
-        if (location != null || !location.equals("")) {
+        if (!location.equals("")) {
 
             Geocoder geocoder = new Geocoder(this);
 
@@ -116,12 +119,22 @@ public class Source extends AppCompatActivity implements OnMapReadyCallback {
                 e.printStackTrace();
             }
 
-            Address address = addressList.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            try {
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-
+    Runnable runnabledelayedTask = new Runnable(){
+        @Override
+        public void run(){
+            mMap.clear();
+            placeMarker();
+        }
+    };
 }
