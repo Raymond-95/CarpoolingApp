@@ -25,7 +25,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.sql.Time;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -110,13 +112,15 @@ public class ShareRestClient {
         mParams.put(name, String.valueOf(value));
     }
 
-    public void addParam(String name, int value) {
-        mParams.put(name, String.valueOf(value));
-    }
+    public void addParam(String name, int value) { mParams.put(name, String.valueOf(value));}
 
     public void addParam(String name, InputStream value) {
         mParams.put(name, value);
     }
+
+    public void addParam(String name, Date value) { mParams.put(name, value);}
+
+    public void addParam(String name, Time value) { mParams.put(name, value);}
 
     public void addParam(String name, File value) {
         try {

@@ -2,6 +2,7 @@ package com.example.raymond.share;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,14 +14,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.raymond.share.jsonparser.ShareApi;
+import com.example.raymond.share.jsonparser.ShareJSON;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
+import org.json.JSONObject;
+
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,11 +41,17 @@ public class RegTrip extends AppCompatActivity {
     private static EditText currentEditText;
     private static EditText trip_date;
     private static EditText trip_time;
+    private static TextView role;
+    private static EditText information;
+    private static TextView create;
     private static Calendar calendar = Calendar.getInstance();
+    private static String internationalTime;
+    private static String getRole;
     private static int hour = calendar.get(Calendar.HOUR_OF_DAY);
     private static int minute = calendar.get(Calendar.MINUTE);
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    private String TAG = "Share";
+    ProgressDialog mProgressDialog;
+    private static final String TAG = "share.activity.login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +126,7 @@ public class RegTrip extends AppCompatActivity {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
+                                internationalTime = hourOfDay + ":" + minute;
                                 String AM_PM = "";
                                 if(hourOfDay < 12) {
                                     if (hourOfDay == 0)
@@ -135,6 +151,119 @@ public class RegTrip extends AppCompatActivity {
                 timePickerDialog.show();
             }
         });
+
+        getRole = getIntent().getStringExtra("role");
+
+        role = (TextView) findViewById(R.id.role);
+        role.setText(getRole);
+
+
+        create = (TextView) findViewById(R.id.create);
+
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                source.setError(null);
+                destination.setError(null);
+                trip_date.setError(null);
+                trip_time.setError(null);
+
+                if (source.getText().toString().trim().equals("")) {
+                    source.setError("Source is required!");
+                }
+                if (destination.getText().toString().trim().equals("")) {
+                    destination.setError("Destination is required!");
+                }
+                if (trip_date.getText().toString().trim().equals("")) {
+                    trip_date.setError("Date is required!");
+                }
+                if (trip_time.getText().toString().trim().equals("")) {
+                    trip_time.setError("Time is required!");
+                }
+
+                if(!source.getText().toString().trim().equals("") &&
+                    !destination.getText().toString().trim().equals("") &&
+                    !trip_date.getText().toString().trim().equals("")  &&
+                    !trip_time.getText().toString().trim().equals("")){
+
+                    Date res_date = dateFormat(trip_date.getText().toString());
+                    Time res_time = timeFormat(internationalTime);
+                    information = (EditText) findViewById(R.id.information);
+
+                    registerTrip(source.getText().toString(),
+                            destination.getText().toString(),
+                            res_date,
+                            res_time,
+                            getRole,
+                            information.getText().toString());
+
+                    Intent intent = new Intent(getApplicationContext(), Homepage.class);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private Date dateFormat(String date){
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date temp_date = null;
+        try {
+            temp_date = format.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return temp_date;
+    }
+
+    private Time timeFormat(String time){
+
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        Date dateTime = null;
+        Time temp_time = null;
+        try {
+            dateTime = format.parse(time);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        long res_dateTime = dateTime.getTime();
+        temp_time = new Time(res_dateTime);
+        return temp_time;
+    }
+
+    private void registerTrip(String source, String destination, Date date, Time time, String role, String information){
+
+        mProgressDialog = ShareApi.init(this)
+                .registerTrip(
+                        source,
+                        destination,
+                        date,
+                        time,
+                        role,
+                        information
+
+                ).call(new ShareApi.DialogResponseHandler() {
+
+                    @Override
+                    public void onSuccess(JSONObject response, ShareJSON meta) {
+                        try {
+                            Log.e(TAG, "Register trip is successfully done.");
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
+                    }
+
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
     }
 
     @Override

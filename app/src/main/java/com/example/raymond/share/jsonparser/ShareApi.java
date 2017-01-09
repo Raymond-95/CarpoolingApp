@@ -6,6 +6,8 @@ import android.content.Context;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.sql.Time;
+import java.util.Date;
 
 public class ShareApi {
 
@@ -143,6 +145,35 @@ public class ShareApi {
         public Builder getAccount(){
             mClient.setMethod(ShareRestClient.GET);
             mClient.setEndPoint("/accounts/me");
+
+            return this;
+        }
+
+        public Builder registerTrip(
+                String source,
+                String destination,
+                Date date,
+                Time time,
+                String role,
+                String information
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/trip/register_trip");
+
+            mClient.addParam("source", source);
+            mClient.addParam("destination", destination);
+            mClient.addParam("date", date);
+            mClient.addParam("time", time);
+            mClient.addParam("role", role);
+            mClient.addParam("information", information);
+
+            return this;
+        }
+
+        public Builder getTrip(){
+            mClient.setMethod(ShareRestClient.GET);
+            mClient.setEndPoint("/trip/all");
 
             return this;
         }

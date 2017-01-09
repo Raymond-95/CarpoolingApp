@@ -12,9 +12,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_layout"/>
+        <android.support.v7.widget.Toolbar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
+            android:id="@+id/toolbar"
+            app:theme="@style/CustomToolBar"
+            app:titleTextAppearance="@style/CustomToolBar.TitleText">
+
+            <TextView
+                android:id="@+id/create"
+                android:text="CREATE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginRight="15dp"
+                android:textAppearance="@android:style/TextAppearance.Theme"
+                android:textColor="@android:color/white" />
+
+        </android.support.v7.widget.Toolbar>
 
         <TextView
             android:layout_width="wrap_content"
@@ -183,7 +203,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Passenger"
             android:id="@+id/role"
             android:layout_below="@+id/textView2"
             android:layout_marginTop="40dp"

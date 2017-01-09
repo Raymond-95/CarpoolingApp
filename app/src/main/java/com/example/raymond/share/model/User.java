@@ -21,7 +21,7 @@ public class User {
 
     public User(){}
 
-    public User(int id,String name, String email, String profileUrl, String imageUrl, String token){
+    public User(int id, String name, String email, String profileUrl, String imageUrl, String token){
         this.id = id;
         this.email = email;
         this.name = name;
