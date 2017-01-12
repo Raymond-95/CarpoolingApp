@@ -38,7 +38,7 @@ public class ShareRestClient {
 
     private static final String TAG = "Share.RestClient";
 	//private static final String API_URL = "https://api-v4.getShare.com";
-    public static final String WEB_URL = "http://192.168.1.221:8000";
+    public static final String WEB_URL = "http://192.168.1.72:8000";
     public static final String API_URL = WEB_URL + "/api";
 
     public static final int RC_AUTH = 9722;

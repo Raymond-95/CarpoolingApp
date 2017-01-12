@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.sql.Time;
-import java.util.Date;
 
 public class ShareApi {
 
@@ -152,8 +151,8 @@ public class ShareApi {
         public Builder registerTrip(
                 String source,
                 String destination,
-                Date date,
-                Time time,
+                String date,
+                String time,
                 String role,
                 String information
         ){

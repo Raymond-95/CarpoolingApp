@@ -27,9 +27,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 
 import org.json.JSONObject;
 
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -47,6 +44,7 @@ public class RegTrip extends AppCompatActivity {
     private static Calendar calendar = Calendar.getInstance();
     private static String internationalTime;
     private static String getRole;
+    private static String date = "";
     private static int hour = calendar.get(Calendar.HOUR_OF_DAY);
     private static int minute = calendar.get(Calendar.MINUTE);
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
@@ -187,14 +185,12 @@ public class RegTrip extends AppCompatActivity {
                     !trip_date.getText().toString().trim().equals("")  &&
                     !trip_time.getText().toString().trim().equals("")){
 
-                    Date res_date = dateFormat(trip_date.getText().toString());
-                    Time res_time = timeFormat(internationalTime);
                     information = (EditText) findViewById(R.id.information);
 
                     registerTrip(source.getText().toString(),
                             destination.getText().toString(),
-                            res_date,
-                            res_time,
+                            date,
+                            internationalTime,
                             getRole,
                             information.getText().toString());
 
@@ -205,36 +201,7 @@ public class RegTrip extends AppCompatActivity {
         });
     }
 
-    private Date dateFormat(String date){
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date temp_date = null;
-        try {
-            temp_date = format.parse(date);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return temp_date;
-    }
-
-    private Time timeFormat(String time){
-
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
-        Date dateTime = null;
-        Time temp_time = null;
-        try {
-            dateTime = format.parse(time);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        long res_dateTime = dateTime.getTime();
-        temp_time = new Time(res_dateTime);
-        return temp_time;
-    }
-
-    private void registerTrip(String source, String destination, Date date, Time time, String role, String information){
+    private void registerTrip(String source, String destination, String date, String time, String role, String information){
 
         mProgressDialog = ShareApi.init(this)
                 .registerTrip(
@@ -301,6 +268,13 @@ public class RegTrip extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             trip_date.setText( day + "-" + month + 1 + "-" + year);
+
+            if (month+1 == 0)
+                month = 12;
+            else
+                month = month+1;
+
+            date = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
         }
     }
 
