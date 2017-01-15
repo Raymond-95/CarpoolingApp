@@ -37,6 +37,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.android.support:recyclerview-v7:25.1.0'
 }
 
 
