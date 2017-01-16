@@ -12,11 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.raymond.share.tripList.DriverFragment;
 import com.example.raymond.share.model.User;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Homepage extends AppCompatActivity {
 
@@ -27,6 +29,7 @@ public class Homepage extends AppCompatActivity {
     private ViewPagerAdapter viewPagerAdapter;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +134,7 @@ public class Homepage extends AppCompatActivity {
 
         View menuHeader =  navigationView.getHeaderView(0);
 
-        User user = new User().getUserAccount(getApplicationContext());
+        user = new User().getUserAccount(getApplicationContext());
 
         TextView nameView = (TextView) menuHeader.findViewById(R.id.username);
         nameView.setText(user.getName());
@@ -139,11 +142,15 @@ public class Homepage extends AppCompatActivity {
         TextView emailView = (TextView) menuHeader.findViewById(R.id.email);
         emailView.setText(user.getEmail());
 
-        new DownloadImage((ImageView) menuHeader.findViewById(R.id.menu_profile_image)).execute(user.getImageUrl());
+        CircleImageView profilePic = (CircleImageView) menuHeader.findViewById(R.id.menu_profile_image);
+        profilePic.setBorderWidth(4);
+        profilePic.setBorderColor(getResources().getColor(R.color.white));
+        new DownloadImage(profilePic).execute(user.getImageUrl());
     }
 
     public void profile(View v) {
-        Intent intent = new Intent(getApplicationContext(), UserOwnProfile.class);
+        Intent intent = new Intent(getApplicationContext(), UserProfile.class);
+        intent.putExtra("id", Integer.toString(user.getId()));
         startActivity(intent);
     }
 }

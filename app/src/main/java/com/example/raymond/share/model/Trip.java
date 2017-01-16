@@ -15,6 +15,7 @@ public class Trip {
     int id;
     String source, destination, information, role, date, time;
     String user_name, imageUrl;
+    int user_id;
 
     public Trip(){}
 
@@ -28,7 +29,7 @@ public class Trip {
         this.role = role;
     }
 
-    public Trip(int id, String source, String destination, String date, String time, String information, String role, String user_name, String imageUrl){
+    public Trip(int id, String source, String destination, String date, String time, String information, String role, int user_id, String user_name, String imageUrl){
         this.id = id;
         this.source = source;
         this.destination = destination;
@@ -36,6 +37,7 @@ public class Trip {
         this.time = time;
         this.information = information;
         this.role = role;
+        this.user_id = user_id;
         this.user_name = user_name;
         this.imageUrl = imageUrl;
     }
@@ -87,6 +89,24 @@ public class Trip {
                 Log.d(getClass().getName(), "Role is null");
             }
 
+            try {
+                this.user_id = response.getInt("user_id");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "User id is null");
+            }
+
+            try {
+                this.user_name = response.getString("name");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Name is null");
+            }
+
+            try {
+                this.imageUrl = response.getString("imageUrl");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Image Url is null");
+            }
+
 
         } catch (JSONException ex) {
 
@@ -133,6 +153,12 @@ public class Trip {
             }
 
             try {
+                this.user_id = response.getInt("user_id");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "User id is null");
+            }
+
+            try {
                 this.user_name = response.getString("name");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Name is null");
@@ -175,6 +201,9 @@ public class Trip {
 
     public String getRole() {return role; }
     public void setRole(String role) { this.role = role; }
+
+    public int getUserId() {return user_id; }
+    public void setUserId(int user_id) { this.user_id = user_id; }
 
     public String getName() {return user_name; }
     public void setName(String user_name) { this.user_name = user_name; }

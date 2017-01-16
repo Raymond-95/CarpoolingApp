@@ -1,10 +1,10 @@
-package com.example.raymond.share.driverList;
+package com.example.raymond.share.tripList;
 
 /**
  * Created by Shade on 5/9/2016.
  */
 
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +14,13 @@ import android.widget.TextView;
 
 import com.example.raymond.share.DownloadImage;
 import com.example.raymond.share.R;
+import com.example.raymond.share.TripDetail;
 import com.example.raymond.share.model.Trip;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DriverAdapter extends RecyclerView.Adapter<DriverAdapter.ViewHolder> {
+public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
     private List<Trip> mItems;
     private ImageView item_image;
@@ -28,7 +29,7 @@ public class DriverAdapter extends RecyclerView.Adapter<DriverAdapter.ViewHolder
     private TextView item_destination;
     private TextView item_date;
 
-    public DriverAdapter() {
+    public TripAdapter() {
         mItems = new ArrayList<>();
     }
 
@@ -75,10 +76,13 @@ public class DriverAdapter extends RecyclerView.Adapter<DriverAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     int position = getAdapterPosition();
+                    final Trip trip = mItems.get(position);
 
-                    Snackbar.make(v, "Click detected on item " + position,
-                            Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    if (trip != null) {
+                        Intent intent = new Intent(v.getContext(), TripDetail.class);
+                        intent.putExtra("id", Integer.toString(trip.getId()));
+                        v.getContext().startActivity(intent);
+                    }
 
                 }
             });

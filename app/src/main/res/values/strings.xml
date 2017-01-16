@@ -16,4 +16,9 @@
     <string name="closeDrawer" />
     <string name="loading">loading</string>
     <string name="title_activity_source">Map</string>
+    <string name="phone2" />
+    <string name="chat">chat</string>
+    <string name="user">user</string>
+    <string name="addFriend">addFriend</string>
+    <string name="to">to</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.raymond.share;
+package com.example.raymond.share.tripList;
 
 
 import android.content.Intent;
@@ -13,7 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.raymond.share.driverList.DriverAdapter;
+import com.example.raymond.share.R;
+import com.example.raymond.share.RegTrip;
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
@@ -31,7 +32,7 @@ public class DriverFragment extends Fragment {
 
     private FloatingActionButton fab;
     private RecyclerView driverList;
-    private DriverAdapter driverAdapter;
+    private TripAdapter driverAdapter;
 
     public DriverFragment() {
         // Required empty public constructor
@@ -46,7 +47,7 @@ public class DriverFragment extends Fragment {
 
         driverList = (RecyclerView) v.findViewById(R.id.driverList);
         driverList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        driverAdapter = new DriverAdapter();
+        driverAdapter = new TripAdapter();
         driverList.setAdapter(driverAdapter);
 
         loadData();
@@ -109,7 +110,7 @@ public class DriverFragment extends Fragment {
     public void loadData() {
 
         ShareApi.init(getActivity())
-                .getTrip()
+                .getTrips()
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
                     @Override

@@ -147,6 +147,18 @@ public class ShareApi {
             return this;
         }
 
+        public Builder getUser(
+                int id
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/accounts/get_user");
+
+            mClient.addParam("id", id);
+
+            return this;
+        }
+
         public Builder registerTrip(
                 String source,
                 String destination,
@@ -169,9 +181,21 @@ public class ShareApi {
             return this;
         }
 
-        public Builder getTrip(){
+        public Builder getTrips(){
             mClient.setMethod(ShareRestClient.GET);
+            mClient.setEndPoint("/trip/get_drive_trips");
+
+            return this;
+        }
+
+        public Builder getTrip(
+                int id
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
             mClient.setEndPoint("/trip/get_driver");
+
+            mClient.addParam("id", id);
 
             return this;
         }

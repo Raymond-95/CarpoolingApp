@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raymond.share.UserOwnProfile">
+    tools:context="com.example.raymond.share.UserProfile">
 
     <include
         android:id="@+id/toolbar"
@@ -25,7 +25,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             app:border="true"
-            app:border_color="#EEEEEE"
+            app:border_color="@color/white"
             app:border_width="4dp"
             app:shadow="true"
             android:layout_marginTop="30dp"
