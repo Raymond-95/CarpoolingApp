@@ -10,15 +10,15 @@
         android:layout_height="410dp"
         android:layout_gravity="center_horizontal|bottom">
 
-    <!--<android.support.design.widget.FloatingActionButton
+    </android.support.v7.widget.RecyclerView>
+
+    <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_margin="16dp"
         android:clickable="true"
         android:id="@+id/addTrip"
-        android:src="@drawable/add" />-->
-
-    </android.support.v7.widget.RecyclerView>
+        android:src="@drawable/add" />
 
 </FrameLayout>

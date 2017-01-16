@@ -14,6 +14,7 @@ import org.parceler.Parcel;
 public class Trip {
     int id;
     String source, destination, information, role, date, time;
+    String user_name, imageUrl;
 
     public Trip(){}
 
@@ -25,6 +26,18 @@ public class Trip {
         this.time = time;
         this.information = information;
         this.role = role;
+    }
+
+    public Trip(int id, String source, String destination, String date, String time, String information, String role, String user_name, String imageUrl){
+        this.id = id;
+        this.source = source;
+        this.destination = destination;
+        this.date = date;
+        this.time = time;
+        this.information = information;
+        this.role = role;
+        this.user_name = user_name;
+        this.imageUrl = imageUrl;
     }
 
     public Trip(JSONObject response){
@@ -118,6 +131,18 @@ public class Trip {
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Role is null");
             }
+
+            try {
+                this.user_name = response.getString("name");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Name is null");
+            }
+
+            try {
+                this.imageUrl = response.getString("imageUrl");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Image Url is null");
+            }
         }
     }
 
@@ -150,4 +175,10 @@ public class Trip {
 
     public String getRole() {return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getName() {return user_name; }
+    public void setName(String user_name) { this.user_name = user_name; }
+
+    public String getImageUrl() {return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

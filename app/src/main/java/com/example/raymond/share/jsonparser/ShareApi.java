@@ -6,7 +6,6 @@ import android.content.Context;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.sql.Time;
 
 public class ShareApi {
 
@@ -172,7 +171,7 @@ public class ShareApi {
 
         public Builder getTrip(){
             mClient.setMethod(ShareRestClient.GET);
-            mClient.setEndPoint("/trip/all");
+            mClient.setEndPoint("/trip/get_driver");
 
             return this;
         }

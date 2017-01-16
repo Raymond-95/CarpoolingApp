@@ -1,6 +1,7 @@
 package com.example.raymond.share;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.raymond.share.driverList.DriverAdapter;
+import com.example.raymond.share.jsonparser.ShareApi;
+import com.example.raymond.share.jsonparser.ShareJSON;
+import com.example.raymond.share.model.Trip;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -40,17 +49,38 @@ public class DriverFragment extends Fragment {
         driverAdapter = new DriverAdapter();
         driverList.setAdapter(driverAdapter);
 
-       // driverListAdapter.setTripList(getData());
+        loadData();
 
-//        fab = (FloatingActionButton) v.findViewById(R.id.addTrip);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), RegTrip.class);
-//                intent.putExtra("role", "driver");
-//                startActivity(intent);
-//            }
-//        });
+        fab = (FloatingActionButton) v.findViewById(R.id.addTrip);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RegTrip.class);
+                intent.putExtra("role", "driver");
+                startActivity(intent);
+            }
+        });
+
+        //hide floating button when srcoll the list
+        driverList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx,int dy){
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) {
+                    // Scroll Down
+                    if (fab.isShown()) {
+                        fab.hide();
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!fab.isShown()) {
+                        fab.show();
+                    }
+                }
+            }
+        });
 
         return v;
     }
@@ -74,5 +104,39 @@ public class DriverFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void loadData() {
+
+        ShareApi.init(getActivity())
+                .getTrip()
+                .call(new ShareApi.CustomJsonResponseHandler() {
+
+                    @Override
+                    public void onSuccess(JSONObject response, ShareJSON meta) {
+
+                        List<Trip> drive = new ArrayList<>();
+
+                        try {
+
+                            for (int i = 0; i < meta.getResults().length(); i++) {
+
+                                drive.add(new Trip(meta.getResults().getJSONObject(i)));
+
+                            }
+
+                            driverAdapter.addData(drive);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
+
+                    }
+
+                });
     }
 }
