@@ -161,6 +161,26 @@ public class ShareApi {
             return this;
         }
 
+        public Builder updateUser(
+                String email,
+                String name,
+                String phonenum,
+                String profileUrl,
+                String imageUrl
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/accounts/update_user");
+
+            mClient.addParam("email", email);
+            mClient.addParam("name", name);
+            mClient.addParam("phonenum", phonenum);
+            mClient.addParam("profileUrl", profileUrl);
+            mClient.addParam("imageUrl", imageUrl);
+
+            return this;
+        }
+
         public Builder registerTrip(
                 String source,
                 String destination,
