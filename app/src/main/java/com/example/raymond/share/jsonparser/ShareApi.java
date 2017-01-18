@@ -183,6 +183,29 @@ public class ShareApi {
             return this;
         }
 
+        public Builder updateTrip(
+                int id,
+                String source,
+                String destination,
+                String date,
+                String time,
+                String role,
+                String information
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/trip/update_trip/" + id);
+
+            mClient.addParam("source", source);
+            mClient.addParam("destination", destination);
+            mClient.addParam("date", date);
+            mClient.addParam("time", time);
+            mClient.addParam("role", role);
+            mClient.addParam("information", information);
+
+            return this;
+        }
+
         public Builder getTrips(
                 String role
         ){

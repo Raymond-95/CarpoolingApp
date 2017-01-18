@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.example.raymond.share.DownloadImage;
 import com.example.raymond.share.R;
-import com.example.raymond.share.TripDetail;
 import com.example.raymond.share.model.Trip;
 
 import java.util.ArrayList;

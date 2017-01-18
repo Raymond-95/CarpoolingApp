@@ -1,4 +1,4 @@
-package com.example.raymond.share;
+package com.example.raymond.share.tripList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.raymond.share.DownloadImage;
+import com.example.raymond.share.EditTrip;
+import com.example.raymond.share.R;
+import com.example.raymond.share.UserProfile;
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
@@ -27,6 +31,7 @@ public class TripDetail extends AppCompatActivity {
 
     private Toolbar toolbar;
     private static int id;
+    private static Trip tripInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class TripDetail extends AppCompatActivity {
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta) {
 
-                        Trip tripInfo = new Trip(meta.getResult());
+                        tripInfo = new Trip(meta.getResult());
 
                         toolbar = (Toolbar) findViewById(R.id.toolbar);
                         setSupportActionBar(toolbar);
@@ -60,7 +65,7 @@ public class TripDetail extends AppCompatActivity {
                         CircleImageView profilePic = (CircleImageView) findViewById(R.id.profile_image);
                         profilePic.setBorderWidth(4);
                         profilePic.setBorderColor(getResources().getColor(R.color.white));
-                        new DownloadImage (profilePic).execute(tripInfo.getImageUrl());
+                        new DownloadImage(profilePic).execute(tripInfo.getImageUrl());
 
                         //direct user to user profile
                         next(tripInfo.getUserId());
@@ -89,11 +94,38 @@ public class TripDetail extends AppCompatActivity {
                         Button button = (Button) findViewById(R.id.send);
                         User user = new User().getUserAccount(getApplicationContext());
                         String from = getIntent().getStringExtra("from");
-                        if (tripInfo.getUserId() == user.getId() && from.equals("fragment"))
+                        if (tripInfo.getUserId() == user.getId() && from.equals("fragment")){
+
                             button.setText("EDIT");
-                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment"))
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    Intent intent = new Intent(getApplicationContext(), EditTrip.class);
+                                    intent.putExtra("id", Integer.toString(tripInfo.getId()));
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment")){
+
                             button.setText("SEND REQUEST");
+                        }
+                        else if (tripInfo.getUserId() == user.getId() && tripInfo.getStatus().equals("available") && from.equals("history")){
+
+                            button.setText("EDIT");
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    Intent intent = new Intent(getApplicationContext(), EditTrip.class);
+                                    intent.putExtra("id", Integer.toString(tripInfo.getId()));
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                         else if (from.equals("history")){
+
                             RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
                             layout.removeView(button);
                         }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:scrollbars="none"
-    tools:context="com.example.raymond.share.TripDetail">
+    tools:context=".tripList.TripDetail">
 
     <RelativeLayout
         android:id="@+id/tripDetail"

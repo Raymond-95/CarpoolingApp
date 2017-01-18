@@ -57,10 +57,11 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".RegTrip" />
-        <activity android:name=".TripDetail" />
+        <activity android:name=".tripList.TripDetail" />
         <activity android:name=".tripList.HistoryFragment" />
         <activity android:name=".tripList.TripHistory" />
-        <activity android:name=".SubActivity"></activity>
+        <activity android:name=".SubActivity" />
+        <activity android:name=".EditTrip"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
+import com.example.raymond.share.model.Trip;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -30,9 +31,10 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RegTrip extends AppCompatActivity {
+public class EditTrip extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private static Trip tripInfo;
     private static EditText source;
     private static EditText destination;
     private static EditText currentEditText;
@@ -40,28 +42,37 @@ public class RegTrip extends AppCompatActivity {
     private static EditText trip_time;
     private static TextView role;
     private static EditText information;
-    private static TextView create;
     private static Calendar calendar = Calendar.getInstance();
     private static String internationalTime;
     private static String getRole;
     private static String date = "";
+    private static int id;
     private static int hour = calendar.get(Calendar.HOUR_OF_DAY);
     private static int minute = calendar.get(Calendar.MINUTE);
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     ProgressDialog mProgressDialog;
-    private static final String TAG = "share.activity.reg_trip";
+    private static final String TAG = "share.activity.editTrip";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reg_trip);
+        setContentView(R.layout.activity_edit_trip);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Add Trip");
+        setTitle("Edit Trip");
 
         source = (EditText) findViewById(R.id.source);
+        destination = (EditText) findViewById(R.id.destination);
+        trip_date = (EditText) findViewById(R.id.date);
+        trip_time = (EditText) findViewById(R.id.time);
+        role = (TextView) findViewById(R.id.role);
+        information = (EditText) findViewById(R.id.information);
+
+        String pass_id = getIntent().getStringExtra("id");
+        id = Integer.parseInt(pass_id);
+        getTrip(id);
 
         source.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +83,7 @@ public class RegTrip extends AppCompatActivity {
                 try {
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                    .build(RegTrip.this);
+                                    .build(EditTrip.this);
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -81,8 +92,6 @@ public class RegTrip extends AppCompatActivity {
                 }
             }
         });
-
-        destination = (EditText) findViewById(R.id.destination);
 
         destination.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +102,7 @@ public class RegTrip extends AppCompatActivity {
                 try {
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                    .build(RegTrip.this);
+                                    .build(EditTrip.this);
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
@@ -103,8 +112,6 @@ public class RegTrip extends AppCompatActivity {
             }
         });
 
-        trip_date = (EditText) findViewById(R.id.date);
-
         trip_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,12 +120,10 @@ public class RegTrip extends AppCompatActivity {
             }
         });
 
-        trip_time = (EditText) findViewById(R.id.time);
-
         trip_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(RegTrip.this,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditTrip.this,
                         new TimePickerDialog.OnTimeSetListener() {
 
                             @Override
@@ -150,15 +155,9 @@ public class RegTrip extends AppCompatActivity {
             }
         });
 
-        getRole = getIntent().getStringExtra("role");
+        TextView edit = (TextView) findViewById(R.id.edit);
 
-        role = (TextView) findViewById(R.id.role);
-        role.setText(getRole);
-
-
-        create = (TextView) findViewById(R.id.create);
-
-        create.setOnClickListener(new View.OnClickListener() {
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -181,17 +180,16 @@ public class RegTrip extends AppCompatActivity {
                 }
 
                 if(!source.getText().toString().trim().equals("") &&
-                    !destination.getText().toString().trim().equals("") &&
-                    !trip_date.getText().toString().trim().equals("")  &&
-                    !trip_time.getText().toString().trim().equals("")){
+                        !destination.getText().toString().trim().equals("") &&
+                        !trip_date.getText().toString().trim().equals("")  &&
+                        !trip_time.getText().toString().trim().equals("")){
 
-                    information = (EditText) findViewById(R.id.information);
-
-                    registerTrip(source.getText().toString(),
+                    updateTrip(id,
+                            source.getText().toString(),
                             destination.getText().toString(),
                             date,
                             internationalTime,
-                            getRole,
+                            role.getText().toString(),
                             information.getText().toString());
 
                     Intent intent = new Intent(getApplicationContext(), Homepage.class);
@@ -201,10 +199,37 @@ public class RegTrip extends AppCompatActivity {
         });
     }
 
-    private void registerTrip(String source, String destination, String date, String time, String role, String information){
+    public void getTrip(int id) {
+
+        ShareApi.init(getApplicationContext())
+                .getTrip(id)
+                .call(new ShareApi.CustomJsonResponseHandler() {
+
+                    @Override
+                    public void onSuccess(JSONObject response, ShareJSON meta) {
+
+                        tripInfo = new Trip(meta.getResult());
+
+                        source.setText(tripInfo.getSource());
+                        destination.setText(tripInfo.getDestination());
+                        trip_date.setText(tripInfo.getDate());
+                        trip_time.setText(tripInfo.getTime());
+                        role.setText((tripInfo.getRole()));
+                        information.setText(tripInfo.getInformation());
+                    }
+                    @Override
+                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
+
+                    }
+
+                });
+    }
+
+    private void updateTrip(int id, String source, String destination, String date, String time, String role, String information){
 
         mProgressDialog = ShareApi.init(this)
-                .registerTrip(
+                .updateTrip(
+                        id,
                         source,
                         destination,
                         date,
@@ -217,7 +242,7 @@ public class RegTrip extends AppCompatActivity {
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta) {
                         try {
-                            Log.e(TAG, "Register trip is successfully done.");
+                            Log.e(TAG, "Trip is successfully update.");
 
                         } catch (Exception e) {
                             e.printStackTrace();

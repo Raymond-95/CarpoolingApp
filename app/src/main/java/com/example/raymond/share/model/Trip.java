@@ -13,13 +13,13 @@ import org.parceler.Parcel;
 @Parcel
 public class Trip {
     int id;
-    String source, destination, information, role, date, time;
+    String source, destination, information, role, date, time, status;
     String user_name, imageUrl;
     int user_id;
 
     public Trip(){}
 
-    public Trip(int id, String source, String destination, String date, String time, String information, String role){
+    public Trip(int id, String source, String destination, String date, String time, String information, String role, String status){
         this.id = id;
         this.source = source;
         this.destination = destination;
@@ -27,9 +27,10 @@ public class Trip {
         this.time = time;
         this.information = information;
         this.role = role;
+        this.status = status;
     }
 
-    public Trip(int id, String source, String destination, String date, String time, String information, String role, int user_id, String user_name, String imageUrl){
+    public Trip(int id, String source, String destination, String date, String time, String information, String role, String status, int user_id, String user_name, String imageUrl){
         this.id = id;
         this.source = source;
         this.destination = destination;
@@ -37,6 +38,7 @@ public class Trip {
         this.time = time;
         this.information = information;
         this.role = role;
+        this.status = status;
         this.user_id = user_id;
         this.user_name = user_name;
         this.imageUrl = imageUrl;
@@ -87,6 +89,12 @@ public class Trip {
                 this.role = response.getString("role");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Role is null");
+            }
+
+            try {
+                this.status = response.getString("status");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Status is null");
             }
 
             try {
@@ -153,6 +161,12 @@ public class Trip {
             }
 
             try {
+                this.status = response.getString("status");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Status is null");
+            }
+
+            try {
                 this.user_id = response.getInt("user_id");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "User id is null");
@@ -201,6 +215,9 @@ public class Trip {
 
     public String getRole() {return role; }
     public void setRole(String role) { this.role = role; }
+
+    public String getStatus() {return status; }
+    public void setStatus(String status) { this.status = status; }
 
     public int getUserId() {return user_id; }
     public void setUserId(int user_id) { this.user_id = user_id; }
