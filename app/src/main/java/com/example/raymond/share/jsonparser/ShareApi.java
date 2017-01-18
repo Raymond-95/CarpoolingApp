@@ -125,6 +125,7 @@ public class ShareApi {
         public Builder registerAccount(
                 String email,
                 String name,
+                String phonenum,
                 String profileUrl,
                 String imageUrl
         ){
@@ -134,6 +135,7 @@ public class ShareApi {
 
             mClient.addParam("email", email);
             mClient.addParam("name", name);
+            mClient.addParam("phonenum", phonenum);
             mClient.addParam("profileUrl", profileUrl);
             mClient.addParam("imageUrl", imageUrl);
 
@@ -181,9 +183,14 @@ public class ShareApi {
             return this;
         }
 
-        public Builder getTrips(){
-            mClient.setMethod(ShareRestClient.GET);
-            mClient.setEndPoint("/trip/get_drive_trips");
+        public Builder getTrips(
+                String role
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/trip/get_trips");
+
+            mClient.addParam("role", role);
 
             return this;
         }
@@ -193,9 +200,16 @@ public class ShareApi {
         ){
             mClient.setExitWhen401(false);
             mClient.setMethod(ShareRestClient.POST);
-            mClient.setEndPoint("/trip/get_driver");
+            mClient.setEndPoint("/trip/get_trip_details");
 
             mClient.addParam("id", id);
+
+            return this;
+        }
+
+        public Builder getHistory(){
+            mClient.setMethod(ShareRestClient.GET);
+            mClient.setEndPoint("/trip/get_history");
 
             return this;
         }

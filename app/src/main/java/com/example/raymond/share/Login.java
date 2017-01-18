@@ -32,6 +32,7 @@ public class Login extends AppCompatActivity {
     private CallbackManager callbackManager;
     private static String email;
     private static String name;
+    private static String phonenum;
     private static String profileUrl;
     private static String imageUrl;
     ProgressDialog mProgressDialog;
@@ -57,7 +58,9 @@ public class Login extends AppCompatActivity {
                         imageUrl = profile.getProfilePictureUri(200,200).toString();
                         name = profile.getName();
 
-                        signUp(email, name, profileUrl, imageUrl);
+                        phonenum = "0124317038";
+
+                        signUp(email, name, phonenum, profileUrl, imageUrl);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -125,12 +128,13 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private void signUp(String email, String name, String profileUrl, String imageUrl){
+    private void signUp(String email, String name, String phonenum, String profileUrl, String imageUrl){
 
         mProgressDialog = ShareApi.init(this)
                 .registerAccount(
                         email,
                         name,
+                        phonenum,
                         profileUrl,
                         imageUrl
 

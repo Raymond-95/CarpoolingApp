@@ -15,8 +15,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.raymond.share.tripList.DriverFragment;
 import com.example.raymond.share.model.User;
+import com.example.raymond.share.tripList.DriverFragment;
+import com.example.raymond.share.tripList.PassengerFragment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -84,7 +85,7 @@ public class Homepage extends AppCompatActivity {
 
                     case R.id.mycarpools:
                         Toast.makeText(getApplicationContext(), "My carpools Selected", Toast.LENGTH_SHORT).show();
-                        //startActivity(new Intent(getApplicationContext(), Mycarpools.class));
+                        startActivity(new Intent(getApplicationContext(), SubActivity.class));
                         return true;
                     case R.id.friends:
                         Toast.makeText(getApplicationContext(), "Friends Selected", Toast.LENGTH_SHORT).show();

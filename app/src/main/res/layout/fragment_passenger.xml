@@ -2,7 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raymond.share.PassengerFragment">
+    tools:context=".tripList.PassengerFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/passengerList"
+        android:layout_width="match_parent"
+        android:layout_height="410dp"
+        android:layout_gravity="center_horizontal|bottom">
+
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -10,6 +18,7 @@
         android:layout_gravity="right|bottom"
         android:layout_margin="16dp"
         android:clickable="true"
+        android:id="@+id/addTrip"
         android:src="@drawable/add" />
 
 </FrameLayout>

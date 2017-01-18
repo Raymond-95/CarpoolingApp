@@ -53,6 +53,9 @@ public class UserProfile extends AppCompatActivity {
                         Button emailBtn = (Button) findViewById(R.id.email);
                         emailBtn.setText(user.getEmail());
 
+                        Button phoneBtn = (Button) findViewById(R.id.phone);
+                        phoneBtn.setText(user.getPhonenum());
+
                         CircleImageView profilePic = (CircleImageView)findViewById(R.id.profileImage);
                         profilePic.setBorderWidth(4);
                         profilePic.setBorderColor(getResources().getColor(R.color.white));

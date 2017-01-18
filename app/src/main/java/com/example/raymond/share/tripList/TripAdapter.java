@@ -28,6 +28,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     private TextView item_source;
     private TextView item_destination;
     private TextView item_date;
+    private String from;
 
     public TripAdapter() {
         mItems = new ArrayList<>();
@@ -45,6 +46,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
 
             notifyDataSetChanged();
         }
+    }
+
+    public void getFrom(String from) {
+        this.from = from;
     }
 
     public void setData(List<Trip> data) {
@@ -81,6 +86,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
                     if (trip != null) {
                         Intent intent = new Intent(v.getContext(), TripDetail.class);
                         intent.putExtra("id", Integer.toString(trip.getId()));
+                        intent.putExtra("from", from);
                         v.getContext().startActivity(intent);
                     }
 

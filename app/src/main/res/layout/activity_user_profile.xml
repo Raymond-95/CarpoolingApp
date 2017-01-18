@@ -82,7 +82,6 @@
         android:paddingRight="10dp"
         android:id="@+id/phone"
         android:background="@drawable/rounded_corner"
-        android:text="+60 12 431 7038"
         android:textSize="15sp"
         android:textAllCaps="false"
         android:layout_marginLeft="10dp"

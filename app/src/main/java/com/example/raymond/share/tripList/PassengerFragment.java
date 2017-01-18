@@ -28,13 +28,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DriverFragment extends Fragment {
+public class PassengerFragment extends Fragment {
 
     private FloatingActionButton fab;
-    private RecyclerView driverList;
-    private TripAdapter driverAdapter;
+    private RecyclerView passengerList;
+    private TripAdapter passengerAdapter;
 
-    public DriverFragment() {
+    public PassengerFragment() {
         // Required empty public constructor
     }
 
@@ -43,12 +43,12 @@ public class DriverFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_driver, container, false);
+        View v =  inflater.inflate(R.layout.fragment_passenger, container, false);
 
-        driverList = (RecyclerView) v.findViewById(R.id.driverList);
-        driverList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        driverAdapter = new TripAdapter();
-        driverList.setAdapter(driverAdapter);
+        passengerList = (RecyclerView) v.findViewById(R.id.passengerList);
+        passengerList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        passengerAdapter = new TripAdapter();
+        passengerList.setAdapter(passengerAdapter);
 
         loadData();
 
@@ -57,13 +57,13 @@ public class DriverFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), RegTrip.class);
-                intent.putExtra("role", "driver");
+                intent.putExtra("role", "passenger");
                 startActivity(intent);
             }
         });
 
         //hide floating button when srcoll the list
-        driverList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        passengerList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx,int dy){
                 super.onScrolled(recyclerView, dx, dy);
@@ -110,24 +110,24 @@ public class DriverFragment extends Fragment {
     public void loadData() {
 
         ShareApi.init(getActivity())
-                .getTrips("driver")
+                .getTrips("passenger")
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta) {
 
-                        List<Trip> drive = new ArrayList<>();
+                        List<Trip> passenger = new ArrayList<>();
 
                         try {
 
                             for (int i = 0; i < meta.getResults().length(); i++) {
 
-                                drive.add(new Trip(meta.getResults().getJSONObject(i)));
+                                passenger.add(new Trip(meta.getResults().getJSONObject(i)));
 
                             }
 
-                            driverAdapter.addData(drive);
-                            driverAdapter.getFrom("fragment");
+                            passengerAdapter.addData(passenger);
+                            passengerAdapter.getFrom("fragment");
 
                         } catch (Exception e) {
                             e.printStackTrace();

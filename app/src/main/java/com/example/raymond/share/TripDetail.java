@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
+import com.example.raymond.share.model.User;
 
 import org.json.JSONObject;
 
@@ -81,6 +84,19 @@ public class TripDetail extends AppCompatActivity {
 
                         TextView information = (TextView) findViewById(R.id.item_info);
                         information.setText(tripInfo.getInformation());
+
+                        //Set Button to th bottom
+                        Button button = (Button) findViewById(R.id.send);
+                        User user = new User().getUserAccount(getApplicationContext());
+                        String from = getIntent().getStringExtra("from");
+                        if (tripInfo.getUserId() == user.getId() && from.equals("fragment"))
+                            button.setText("EDIT");
+                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment"))
+                            button.setText("SEND REQUEST");
+                        else if (from.equals("history")){
+                            RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
+                            layout.removeView(button);
+                        }
                     }
 
                     @Override

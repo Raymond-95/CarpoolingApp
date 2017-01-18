@@ -17,14 +17,15 @@ import org.parceler.Parcel;
 @Parcel
 public class User {
     int id;
-    String email, name, profileUrl, imageUrl, token;
+    String email, name, phonenum, profileUrl, imageUrl, token;
 
     public User(){}
 
-    public User(int id, String name, String email, String profileUrl, String imageUrl, String token){
+    public User(int id, String email, String name, String phonenum, String profileUrl, String imageUrl, String token){
         this.id = id;
         this.email = email;
         this.name = name;
+        this.phonenum = phonenum;
         this.profileUrl = profileUrl;
         this.imageUrl = imageUrl;
         this.token = token;
@@ -51,6 +52,12 @@ public class User {
                 this.name = response.getString("name");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Name is null");
+            }
+
+            try {
+                this.phonenum = response.getString("phonenum");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Phone number is null");
             }
 
             try {
@@ -92,6 +99,12 @@ public class User {
             }
 
             try {
+                this.phonenum = response.getString("phonenum");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Phone number is null");
+            }
+
+            try {
                 this.profileUrl = response.getString("profileUrl");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Profile url is null");
@@ -122,11 +135,14 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
     public void setname(String name) {
         this.name = name;
+    }
+
+    public String getPhonenum() { return phonenum; }
+    public void setPhonenum(String phonenum) {
+        this.phonenum = phonenum;
     }
 
     public String getProfileUrl() { return profileUrl; }
@@ -146,6 +162,7 @@ public class User {
         appPreferences.saveUserId(id);
         appPreferences.saveUserEmail(email);
         appPreferences.saveUsername(name);
+        appPreferences.saveUserPhonenum(phonenum);
         appPreferences.saveUserProfileUrl(profileUrl);
         appPreferences.saveUserImageUrl(imageUrl);
         appPreferences.saveUserToken(token);
@@ -157,6 +174,7 @@ public class User {
         this.id = appPreferences.getUserId();
         this.email = appPreferences.getUserEmail();
         this.name = appPreferences.getUsername();
+        this.phonenum = appPreferences.getUserPhonenum();
         this.profileUrl = appPreferences.getUserProfileUrl();
         this.imageUrl = appPreferences.getUserImageUrl();
         this.token = appPreferences.getUserToken();
@@ -170,6 +188,7 @@ public class User {
         appPreferences.saveUserId(0);
         appPreferences.saveUserEmail("");
         appPreferences.saveUsername("");
+        appPreferences.saveUserPhonenum("");
         appPreferences.saveUserProfileUrl("");
         appPreferences.saveUserImageUrl("");
         appPreferences.saveUserToken("");

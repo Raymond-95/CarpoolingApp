@@ -1,9 +1,7 @@
 package com.example.raymond.share.tripList;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.raymond.share.R;
-import com.example.raymond.share.RegTrip;
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
@@ -28,13 +25,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DriverFragment extends Fragment {
+public class TripHistory extends Fragment {
 
-    private FloatingActionButton fab;
-    private RecyclerView driverList;
-    private TripAdapter driverAdapter;
+    private RecyclerView tripList;
+    private TripAdapter tripAdapter;
 
-    public DriverFragment() {
+    public TripHistory() {
         // Required empty public constructor
     }
 
@@ -43,45 +39,14 @@ public class DriverFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.fragment_driver, container, false);
+        View v =  inflater.inflate(R.layout.activity_trip_history, container, false);
 
-        driverList = (RecyclerView) v.findViewById(R.id.driverList);
-        driverList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        driverAdapter = new TripAdapter();
-        driverList.setAdapter(driverAdapter);
+        tripList = (RecyclerView) v.findViewById(R.id.tripList);
+        tripList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        tripAdapter = new TripAdapter();
+        tripList.setAdapter(tripAdapter);
 
         loadData();
-
-        fab = (FloatingActionButton) v.findViewById(R.id.addTrip);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RegTrip.class);
-                intent.putExtra("role", "driver");
-                startActivity(intent);
-            }
-        });
-
-        //hide floating button when srcoll the list
-        driverList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx,int dy){
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (dy >0) {
-                    // Scroll Down
-                    if (fab.isShown()) {
-                        fab.hide();
-                    }
-                }
-                else if (dy <0) {
-                    // Scroll Up
-                    if (!fab.isShown()) {
-                        fab.show();
-                    }
-                }
-            }
-        });
 
         return v;
     }
@@ -110,24 +75,24 @@ public class DriverFragment extends Fragment {
     public void loadData() {
 
         ShareApi.init(getActivity())
-                .getTrips("driver")
+                .getHistory()
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta) {
 
-                        List<Trip> drive = new ArrayList<>();
+                        List<Trip> trips = new ArrayList<>();
 
                         try {
 
                             for (int i = 0; i < meta.getResults().length(); i++) {
 
-                                drive.add(new Trip(meta.getResults().getJSONObject(i)));
+                                trips.add(new Trip(meta.getResults().getJSONObject(i)));
 
                             }
 
-                            driverAdapter.addData(drive);
-                            driverAdapter.getFrom("fragment");
+                            tripAdapter.addData(trips);
+                            tripAdapter.getFrom("history");
 
                         } catch (Exception e) {
                             e.printStackTrace();
