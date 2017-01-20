@@ -1,6 +1,7 @@
 package com.example.raymond.share.tripList;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,6 +68,10 @@ public class TripDetail extends AppCompatActivity {
                         profilePic.setBorderColor(getResources().getColor(R.color.white));
                         new DownloadImage(profilePic).execute(tripInfo.getImageUrl());
 
+                        ImageView background = (ImageView) findViewById(R.id.background);
+                        new DownloadImage(background).execute(tripInfo.getImageUrl());
+                        background.setColorFilter(Color.rgb(123, 123, 123), android.graphics.PorterDuff.Mode.MULTIPLY);
+
                         //direct user to user profile
                         next(tripInfo.getUserId());
 
@@ -91,13 +96,13 @@ public class TripDetail extends AppCompatActivity {
                         information.setText(tripInfo.getInformation());
 
                         //Set Button to th bottom
-                        Button button = (Button) findViewById(R.id.send);
+                        Button send = (Button) findViewById(R.id.send);
                         User user = new User().getUserAccount(getApplicationContext());
                         String from = getIntent().getStringExtra("from");
                         if (tripInfo.getUserId() == user.getId() && from.equals("fragment")){
 
-                            button.setText("EDIT");
-                            button.setOnClickListener(new View.OnClickListener() {
+                            send.setText("EDIT");
+                            send.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
@@ -109,12 +114,12 @@ public class TripDetail extends AppCompatActivity {
                         }
                         else if (tripInfo.getUserId() != user.getId() && from.equals("fragment")){
 
-                            button.setText("SEND REQUEST");
+                            send.setText("SEND REQUEST");
                         }
                         else if (tripInfo.getUserId() == user.getId() && tripInfo.getStatus().equals("available") && from.equals("history")){
 
-                            button.setText("EDIT");
-                            button.setOnClickListener(new View.OnClickListener() {
+                            send.setText("EDIT");
+                            send.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
@@ -127,7 +132,7 @@ public class TripDetail extends AppCompatActivity {
                         else if (from.equals("history")){
 
                             RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
-                            layout.removeView(button);
+                            layout.removeView(send);
                         }
                     }
 

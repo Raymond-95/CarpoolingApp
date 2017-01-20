@@ -181,6 +181,30 @@ public class ShareApi {
             return this;
         }
 
+        public Builder verifyUser(
+                int friend_id
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/friend/verify_user");
+
+            mClient.addParam("friend_id", friend_id);
+
+            return this;
+        }
+
+        public Builder addFriend(
+                int friend_id
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/friend/add_friend");
+
+            mClient.addParam("friend_id", friend_id);
+
+            return this;
+        }
+
         public Builder registerTrip(
                 String source,
                 String destination,

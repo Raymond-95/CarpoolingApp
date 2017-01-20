@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.raymond.share.jsonparser.ShareApi;
@@ -35,6 +37,8 @@ public class Login extends AppCompatActivity {
     private static String phonenum;
     private static String profileUrl;
     private static String imageUrl;
+    private static Button facebookLogin;
+    private static LoginButton loginButton;
     ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.login";
 
@@ -91,13 +95,19 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
-        LoginButton loginButton;
 
-        loginButton = (LoginButton)findViewById(R.id.facebookLogin);
+        facebookLogin = (Button) findViewById(R.id.facebookLogin);
+        loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         callbackManager = CallbackManager.Factory.create();
 
         loginButton.registerCallback(callbackManager, callback);
+    }
+
+    public void onClick(View v) {
+        if (v == facebookLogin) {
+            loginButton.performClick();
+        }
     }
 
     @Override
@@ -198,6 +208,7 @@ public class Login extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), Homepage.class);
                         startActivity(intent);
 
+                        finish();
                     }
 
                     @Override

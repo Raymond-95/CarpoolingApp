@@ -42,29 +42,4 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CONFIRM"
-        android:id="@+id/confirm"
-        android:background="@drawable/rounded_corner3"
-        android:clickable="true"
-        android:layout_below="@+id/changePhonenum"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_alignStart="@+id/changePhonenum" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CANCEL"
-        android:id="@+id/cancel"
-        android:clickable="true"
-        android:layout_gravity="right"
-        android:background="@drawable/rounded_corner3"
-        android:layout_below="@+id/changePhonenum"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_alignEnd="@+id/changePhonenum" />
-
 </RelativeLayout>

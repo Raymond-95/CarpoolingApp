@@ -24,10 +24,16 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="214dp"
-            android:background="#6A5ACD"
             android:orientation="vertical"
             android:id="@+id/topPanel"
             android:layout_below="@+id/toolbar">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:id="@+id/background"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -287,6 +293,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/send"
+            android:textColor="@color/white"
             android:background="@drawable/completely_rounded"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"

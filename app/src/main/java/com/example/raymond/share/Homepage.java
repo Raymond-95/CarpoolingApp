@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.raymond.share.model.User;
 import com.example.raymond.share.tripList.DriverFragment;
 import com.example.raymond.share.tripList.PassengerFragment;
+import com.facebook.login.LoginManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -96,7 +97,9 @@ public class Homepage extends AppCompatActivity {
                         //startActivity(new Intent(getApplicationContext(), Messages.class));
                         return true;
                     case R.id.logout:
+                        LoginManager.getInstance().logOut();
                         startActivity(new Intent(getApplicationContext(), Login.class));
+                        finish();
                         return true;
                     default:
                         Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();

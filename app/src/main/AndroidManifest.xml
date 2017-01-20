@@ -43,7 +43,9 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".Homepage" />
+        <activity android:name=".Homepage" /><!-- Stop the activity from going back -->
+
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -58,8 +60,6 @@
 
         <activity android:name=".RegTrip" />
         <activity android:name=".tripList.TripDetail" />
-        <activity android:name=".tripList.HistoryFragment" />
-        <activity android:name=".tripList.TripHistory" />
         <activity android:name=".SubActivity" />
         <activity android:name=".EditTrip"></activity>
     </application>

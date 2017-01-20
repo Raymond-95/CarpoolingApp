@@ -25,7 +25,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Change flat tyre together"
+        android:text="Together we make the life better"
         android:id="@+id/textView"
         android:textSize="20sp"
         android:textIsSelectable="false"
@@ -34,12 +34,24 @@
         android:layout_centerHorizontal="true" />
 
     <com.facebook.login.widget.LoginButton
-        android:id="@+id/facebookLogin"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/facebookLogin"
+        android:text="Log in with Facebook"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="#4E6CAB"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
         android:layout_gravity="center"
         android:layout_marginTop="76dp"
         android:textSize="20dp"
+        android:padding="10dp"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 

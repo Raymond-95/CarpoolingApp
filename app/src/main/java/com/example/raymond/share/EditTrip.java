@@ -194,6 +194,8 @@ public class EditTrip extends AppCompatActivity {
 
                     Intent intent = new Intent(getApplicationContext(), Homepage.class);
                     startActivity(intent);
+
+                    finish();
                 }
             }
         });
