@@ -293,6 +293,18 @@ public class ShareApi {
             return this;
         }
 
+        public Builder sendTripRequest(
+                int id
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/notification/send_trip_request");
+
+            mClient.addParam("id", id);
+
+            return this;
+        }
+
         public Builder updateAccount(
                 String fname,
                 String lname,

@@ -261,8 +261,6 @@ public class UserProfile extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                Log.e("aaaaaaaaaaaaaaaaaaaaa", object);
-
                 if (object.equals("true"))
                     result = true;
                 else if (object.equals("false"))

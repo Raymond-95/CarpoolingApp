@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class TripDetail extends AppCompatActivity {
     private Toolbar toolbar;
     private static int id;
     private static Trip tripInfo;
+    private static Button send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,11 +97,11 @@ public class TripDetail extends AppCompatActivity {
                         TextView information = (TextView) findViewById(R.id.item_info);
                         information.setText(tripInfo.getInformation());
 
-                        //Set Button to th bottom
-                        Button send = (Button) findViewById(R.id.send);
+                        //Set Button to the bottom
+                        send = (Button) findViewById(R.id.send);
                         User user = new User().getUserAccount(getApplicationContext());
                         String from = getIntent().getStringExtra("from");
-                        if (tripInfo.getUserId() == user.getId() && from.equals("fragment")){
+                        if (tripInfo.getUserId() == user.getId() && from.equals("fragment") && tripInfo.getStatus().equals("available")){
 
                             send.setText("EDIT");
                             send.setOnClickListener(new View.OnClickListener() {
@@ -112,9 +114,19 @@ public class TripDetail extends AppCompatActivity {
                                 }
                             });
                         }
-                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment")){
+                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment") && tripInfo.getStatus().equals("available")){
 
                             send.setText("SEND REQUEST");
+                            send.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    sendTripRequest(tripInfo.getId());
+                                    RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
+                                    layout.removeView(send);
+
+                                }
+                            });
                         }
                         else if (tripInfo.getUserId() == user.getId() && tripInfo.getStatus().equals("available") && from.equals("history")){
 
@@ -173,5 +185,24 @@ public class TripDetail extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void sendTripRequest(int id) {
+
+        ShareApi.init(getApplicationContext())
+                .sendTripRequest(id)
+                .call(new ShareApi.CustomJsonResponseHandler() {
+
+                    @Override
+                    public void onSuccess(JSONObject response, ShareJSON meta) {
+
+                        Log.e("Share", "Request is sending out.");
+                    }
+                    @Override
+                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
+
+                    }
+
+                });
     }
 }

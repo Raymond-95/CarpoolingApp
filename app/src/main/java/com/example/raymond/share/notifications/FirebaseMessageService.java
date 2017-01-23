@@ -34,8 +34,10 @@ public class FirebaseMessageService extends FirebaseMessagingService{
         //Check if the message contains notification
 
         if(remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Mesage title:" + remoteMessage.getNotification().getTitle());
             Log.d(TAG, "Mesage body:" + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+            sendNotification(remoteMessage.getNotification().getTitle(),
+                             remoteMessage.getNotification().getBody());
         }
     }
 
@@ -43,7 +45,7 @@ public class FirebaseMessageService extends FirebaseMessagingService{
      * Dispay the notification
      * @param body
      */
-    private void sendNotification(String body) {
+    private void sendNotification(String title, String body) {
 
         Intent intent = new Intent(this, Homepage.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -54,7 +56,7 @@ public class FirebaseMessageService extends FirebaseMessagingService{
 
         NotificationCompat.Builder notifiBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Firebase Cloud Messaging")
+                .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(notificationSound)

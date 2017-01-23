@@ -21,6 +21,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -96,6 +97,8 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        LoginManager.getInstance().logOut();
 
         facebookLogin = (Button) findViewById(R.id.facebookLogin);
         loginButton = (LoginButton)findViewById(R.id.login_button);
