@@ -181,6 +181,18 @@ public class ShareApi {
             return this;
         }
 
+        public Builder verifyDrivingLicense(
+                int selection
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/accounts/verify_license");
+
+            mClient.addParam("catid", selection);
+
+            return this;
+        }
+
         public Builder verifyUser(
                 int friend_id
         ){
@@ -300,6 +312,30 @@ public class ShareApi {
             mClient.addParam("mobile", mobile);
             mClient.addParam("email", email);
             mClient.addParam("image", picture);
+
+            return this;
+        }
+
+        public Builder storeToken(
+                String token
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/notification/store_token");
+
+            mClient.addParam("token", token);
+
+            return this;
+        }
+
+        public Builder updateToken(
+                String token
+        ){
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/notification/update_token");
+
+            mClient.addParam("token", token);
 
             return this;
         }

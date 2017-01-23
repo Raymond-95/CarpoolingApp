@@ -43,7 +43,8 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".Homepage" /><!-- Stop the activity from going back -->
+        <activity android:name=".Homepage" />
+        <!-- Stop the activity from going back -->
 
 
         <!--
@@ -61,7 +62,19 @@
         <activity android:name=".RegTrip" />
         <activity android:name=".tripList.TripDetail" />
         <activity android:name=".SubActivity" />
-        <activity android:name=".EditTrip"></activity>
+        <activity android:name=".EditTrip" />
+        <activity android:name=".tripList.webview.LicenseVerification"></activity>
+
+        <service android:name=".notifications.FirebaseMessageService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name=".notifications.FcmInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

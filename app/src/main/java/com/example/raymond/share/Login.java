@@ -23,6 +23,7 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -201,6 +202,11 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta){
+
+                        String token = FirebaseInstanceId.getInstance().getToken();
+                        Log.e(TAG, "Token: " + token);
+                        storeToken(token);
+
                         User userInfo = new User(response);
                         userInfo.saveUserAccount(Login.this);
                         setResult(RESULT_OK);
@@ -209,6 +215,29 @@ public class Login extends AppCompatActivity {
                         startActivity(intent);
 
                         finish();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
+
+                    }
+                }
+        );
+    }
+
+    public void storeToken(String token) {
+
+        ShareApi.init(getApplicationContext())
+                .setProgressDialog(mProgressDialog)
+                .storeToken(
+                        token
+                ).call(
+                new ShareApi.DialogResponseHandler(){
+
+                    @Override
+                    public void onSuccess(JSONObject response, ShareJSON meta){
+
+                        Log.d(TAG, "Token is successfully stored.");
                     }
 
                     @Override

@@ -14,10 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.raymond.share.R;
-import com.example.raymond.share.RegTrip;
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
+import com.example.raymond.share.tripList.webview.LicenseVerification;
 
 import org.json.JSONObject;
 
@@ -56,7 +56,7 @@ public class DriverFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RegTrip.class);
+                Intent intent = new Intent(getActivity(), LicenseVerification.class);
                 intent.putExtra("role", "driver");
                 startActivity(intent);
             }
