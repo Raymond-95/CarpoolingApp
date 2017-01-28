@@ -23,7 +23,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -31,12 +30,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserProfile extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private static User user;
-    private static String getPhonenum;
-    private static Button phoneBtn;
-    private static  Button send;
-    private static String TAG = "com.example.raymond.share.UserProfile";
-    private static RelativeLayout layout;
+    private User user;
+    private String getPhonenum;
+    private Button phoneBtn;
+    private  Button send;
+    private String TAG = "com.example.raymond.share.UserProfile";
+    private RelativeLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,28 +75,12 @@ public class UserProfile extends AppCompatActivity {
                         getPhonenum = user.getPhonenum();
                         User me = new User().getUserAccount(getApplicationContext());
                         phoneBtn = (Button) findViewById(R.id.phone);
-                        boolean result = verifyUser(user.getId());
+
                         if (me.getId() == user.getId())
                         {
                             popUpWindow();
                         }
-                        else{
 
-                            if (result) {
-                                layout.addView(send);
-                                send.setText("SEND FRIEND REQUEST");
-                                send.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                    }
-                                });
-                            }
-                            else{
-                                RelativeLayout layout = (RelativeLayout) findViewById(R.id.top);
-                                layout.removeView(send);
-                            }
-                        }
                         phoneBtn.setText(setPhoneFormat(user.getPhonenum()));
 
                         ImageView background = (ImageView) findViewById(R.id.background);
@@ -231,6 +214,7 @@ public class UserProfile extends AppCompatActivity {
                         setResult(RESULT_OK);
 
                         finish();
+                        Intent intent;
                         startActivity(getIntent());
 
                     }
@@ -241,37 +225,5 @@ public class UserProfile extends AppCompatActivity {
                     }
                 }
         );
-    }
-
-    private static boolean result;
-    private boolean verifyUser(int id){
-
-        ShareApi.init(this)
-                .verifyUser(
-                        id
-                ).call(new ShareApi.DialogResponseHandler() {
-
-            @Override
-            public void onSuccess(JSONObject response, ShareJSON meta) {
-
-                String object = null;
-                try {
-                    object = response.getString("result");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if (object.equals("true"))
-                    result = true;
-                else if (object.equals("false"))
-                    result = false;
-            }
-
-            @Override
-            public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
-            }
-        });
-
-        return result;
     }
 }

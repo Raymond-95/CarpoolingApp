@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.raymond.share.Homepage;
 import com.example.raymond.share.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -20,6 +19,7 @@ import com.google.firebase.messaging.RemoteMessage;
 public class FirebaseMessageService extends FirebaseMessagingService{
 
     private static final String TAG = "FirebaseMessageService";
+    private static Intent intent;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -36,7 +36,7 @@ public class FirebaseMessageService extends FirebaseMessagingService{
         if(remoteMessage.getNotification() != null) {
             Log.d(TAG, "Mesage title:" + remoteMessage.getNotification().getTitle());
             Log.d(TAG, "Mesage body:" + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getTitle(),
+            categorizeNotification(remoteMessage.getNotification().getTitle(),
                              remoteMessage.getNotification().getBody());
         }
     }
@@ -45,11 +45,20 @@ public class FirebaseMessageService extends FirebaseMessagingService{
      * Dispay the notification
      * @param body
      */
-    private void sendNotification(String title, String body) {
+    private void categorizeNotification(String title, String body) {
 
-        Intent intent = new Intent(this, Homepage.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent = null;
 
+        if (body.equals("Hi, I would like to take a ride with you.")){
+            intent = new Intent(this, NotificationList.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+
+        sendNotification(title, body);
+
+    }
+
+    private void sendNotification(String title, String body){
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0/*Request code*/, intent, PendingIntent.FLAG_ONE_SHOT);
         //Set sound of notification
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

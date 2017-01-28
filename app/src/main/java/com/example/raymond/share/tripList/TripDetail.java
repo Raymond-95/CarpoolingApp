@@ -32,9 +32,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TripDetail extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private static int id;
-    private static Trip tripInfo;
-    private static Button send;
+    private int id;
+    private Trip tripInfo;
+    private Button send;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +141,7 @@ public class TripDetail extends AppCompatActivity {
                                 }
                             });
                         }
-                        else if (from.equals("history")){
+                        else if (from.equals("history") || tripInfo.getStatus().equals("not available")){
 
                             RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
                             layout.removeView(send);
@@ -200,7 +200,7 @@ public class TripDetail extends AppCompatActivity {
                     }
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
-
+                        Log.e("Share", e.toString());
                     }
 
                 });

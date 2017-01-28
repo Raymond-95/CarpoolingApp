@@ -46,9 +46,9 @@ public class EditTrip extends AppCompatActivity {
     private static String internationalTime;
     private static String getRole;
     private static String date = "";
-    private static int id;
-    private static int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    private static int minute = calendar.get(Calendar.MINUTE);
+    private int id;
+    private int hour = calendar.get(Calendar.HOUR_OF_DAY);
+    private int minute = calendar.get(Calendar.MINUTE);
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.editTrip";
@@ -230,6 +230,7 @@ public class EditTrip extends AppCompatActivity {
     private void updateTrip(int id, String source, String destination, String date, String time, String role, String information){
 
         mProgressDialog = ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
                 .updateTrip(
                         id,
                         source,
@@ -320,4 +321,20 @@ public class EditTrip extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        tripInfo = null;
+        source = null;
+        destination = null;
+        currentEditText = null;
+        trip_date = null;
+        trip_time = null;
+        role = null;
+        information = null;
+        calendar = null;
+        internationalTime = null;
+        getRole = null;
+        date = null;
+    }
 }

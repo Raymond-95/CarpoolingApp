@@ -35,12 +35,9 @@ public class Login extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private static String email;
-    private static String name;
-    private static String phonenum;
-    private static String profileUrl;
-    private static String imageUrl;
-    private static Button facebookLogin;
-    private static LoginButton loginButton;
+    private String finalResult = "false";
+    private Button facebookLogin;
+    private LoginButton loginButton;
     ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.login";
 
@@ -58,15 +55,25 @@ public class Login extends AppCompatActivity {
                     Log.i("LoginActivity", response.toString());
                     try {
                         email = object.getString("email");
-                        profileUrl = getFacebookPageURL(getApplicationContext());
+                        String profileUrl = getFacebookPageURL(getApplicationContext());
 
                         Profile profile = Profile.getCurrentProfile();
-                        imageUrl = profile.getProfilePictureUri(200,200).toString();
-                        name = profile.getName();
+                        String imageUrl = profile.getProfilePictureUri(200,200).toString();
+                        String name = profile.getName();
 
-                        phonenum = "0124317038";
+                        String phonenum = "0124317038";
 
-                        signUp(email, name, phonenum, profileUrl, imageUrl);
+                        getExistingAcc(email);
+
+                        if (finalResult.equals("false")){
+
+                            //store FCM token if it is a first time login
+                            String fcmtoken = FirebaseInstanceId.getInstance().getToken();
+                            Log.e(TAG, "Token: " + fcmtoken);
+                            storeToken(email, fcmtoken);
+                        }
+
+                        registerAccount(email, name, phonenum, profileUrl, imageUrl);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -142,42 +149,69 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private void signUp(String email, String name, String phonenum, String profileUrl, String imageUrl){
+    public void getExistingAcc(String email) {
 
-        mProgressDialog = ShareApi.init(this)
+        mProgressDialog =ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
+                .getExistingAcc(
+                        email
+                ).call(
+                        new ShareApi.DialogResponseHandler(){
+
+                            @Override
+                            public void onSuccess(JSONObject response, ShareJSON meta){
+
+                                String result;
+                                try {
+                                    result = response.getJSONObject("result").getString("check");
+                                    finalResult = result;
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
+                                Log.e(TAG,"Error on get existing user");
+                            }
+                        }
+                )
+                .keepProgressDialog()
+                .getProgressDialog();
+
+    }
+
+    public void registerAccount(String email, String name, String phonenum, String profileUrl, String imageUrl) {
+
+        mProgressDialog =ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
                 .registerAccount(
                         email,
                         name,
                         phonenum,
                         profileUrl,
                         imageUrl
+                        ).call(
+                        new ShareApi.DialogResponseHandler(){
 
-                ).call(new ShareApi.DialogResponseHandler() {
+                            @Override
+                            public void onSuccess(JSONObject response, ShareJSON meta){
+                                emailLogin();
+                            }
 
-                    @Override
-                    public void onSuccess(JSONObject response, ShareJSON meta) {
-                        try {
-                            Log.d(TAG, "Sign Up Success.");
-                            emailLogin();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            @Override
+                            public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
+                                Log.e("Error", "Registration failed!");
+                            }
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
-                    }
-
-                })
+                )
                 .keepProgressDialog()
                 .getProgressDialog();
     }
 
     public void emailLogin() {
 
-        ShareApi.init(getApplicationContext())
-                .setProgressDialog(mProgressDialog)
+       ShareApi.init(this)
                 .emailLogin(
                         email
                 ).call(
@@ -186,13 +220,12 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta){
 
-                        setResult(RESULT_OK);
                         getAccount();
                     }
 
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
-
+                        Log.e("Error", "Login failed!");
                     }
                 }
         );
@@ -206,13 +239,14 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta){
 
-                        String token = FirebaseInstanceId.getInstance().getToken();
-                        Log.e(TAG, "Token: " + token);
-                        storeToken(token);
-
                         User userInfo = new User(response);
                         userInfo.saveUserAccount(Login.this);
                         setResult(RESULT_OK);
+
+                        if (mProgressDialog != null) {
+                            mProgressDialog.dismiss();
+                            mProgressDialog = null;
+                        }
 
                         Intent intent = new Intent(getApplicationContext(), Homepage.class);
                         startActivity(intent);
@@ -222,18 +256,19 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
-
+                        Log.e("GetAccount", "Unable to get user account.");
                     }
                 }
         );
     }
 
-    public void storeToken(String token) {
+    public void storeToken(String email, String fcmtoken) {
 
-        ShareApi.init(getApplicationContext())
+        mProgressDialog =ShareApi.init(this)
                 .setProgressDialog(mProgressDialog)
                 .storeToken(
-                        token
+                        email,
+                        fcmtoken
                 ).call(
                 new ShareApi.DialogResponseHandler(){
 
@@ -245,9 +280,23 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
-
+                        Log.e(TAG,"Error on token storing");
                     }
                 }
-        );
+        )
+        .keepProgressDialog()
+        .getProgressDialog();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+
+        email = null;
     }
 }

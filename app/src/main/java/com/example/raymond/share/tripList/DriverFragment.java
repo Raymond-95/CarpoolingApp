@@ -1,6 +1,7 @@
 package com.example.raymond.share.tripList;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,7 @@ public class DriverFragment extends Fragment {
     private FloatingActionButton fab;
     private RecyclerView driverList;
     private TripAdapter driverAdapter;
+    ProgressDialog mProgressDialog;
 
     public DriverFragment() {
         // Required empty public constructor
@@ -109,7 +111,8 @@ public class DriverFragment extends Fragment {
 
     public void loadData() {
 
-        ShareApi.init(getActivity())
+        mProgressDialog = ShareApi.init(getActivity())
+                .setProgressDialog(mProgressDialog)
                 .getTrips("driver")
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
@@ -139,6 +142,18 @@ public class DriverFragment extends Fragment {
 
                     }
 
-                });
+                })
+        .keepProgressDialog()
+        .getProgressDialog();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

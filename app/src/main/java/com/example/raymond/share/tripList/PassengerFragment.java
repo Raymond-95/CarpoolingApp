@@ -1,6 +1,7 @@
 package com.example.raymond.share.tripList;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,7 @@ public class PassengerFragment extends Fragment {
     private FloatingActionButton fab;
     private RecyclerView passengerList;
     private TripAdapter passengerAdapter;
+    ProgressDialog mProgressDialog;
 
     public PassengerFragment() {
         // Required empty public constructor
@@ -109,7 +111,8 @@ public class PassengerFragment extends Fragment {
 
     public void loadData() {
 
-        ShareApi.init(getActivity())
+        mProgressDialog = ShareApi.init(getActivity())
+                .setProgressDialog(mProgressDialog)
                 .getTrips("passenger")
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
@@ -139,6 +142,18 @@ public class PassengerFragment extends Fragment {
 
                     }
 
-                });
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

@@ -33,20 +33,20 @@ import java.util.Date;
 public class RegTrip extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private static EditText source;
-    private static EditText destination;
-    private static EditText currentEditText;
+    private EditText source;
+    private EditText destination;
+    private EditText currentEditText;
     private static EditText trip_date;
-    private static EditText trip_time;
-    private static TextView role;
-    private static EditText information;
-    private static TextView create;
-    private static Calendar calendar = Calendar.getInstance();
-    private static String internationalTime;
-    private static String getRole;
+    private EditText trip_time;
+    private TextView role;
+    private EditText information;
+    private TextView create;
+    private Calendar calendar = Calendar.getInstance();
+    private String internationalTime;
+    private String getRole;
     private static String date = "";
-    private static int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    private static int minute = calendar.get(Calendar.MINUTE);
+    private int hour = calendar.get(Calendar.HOUR_OF_DAY);
+    private int minute = calendar.get(Calendar.MINUTE);
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.reg_trip";
@@ -295,4 +295,10 @@ public class RegTrip extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        trip_date = null;
+        date = null;
+    }
 }

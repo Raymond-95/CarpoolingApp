@@ -16,9 +16,27 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include
+            <android.support.v7.widget.Toolbar
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:fitsSystemWindows="true"
                 android:id="@+id/toolbar"
-                layout="@layout/toolbar_layout" />
+                app:theme="@style/CustomToolBar"
+                app:titleTextAppearance="@style/CustomToolBar.TitleText">
+
+                <ImageView
+                    android:id="@+id/notification"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/notification"/>
+
+            </android.support.v7.widget.Toolbar>
 
             <android.support.v4.view.ViewPager
                 android:layout_width="wrap_content"

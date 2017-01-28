@@ -12,12 +12,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.raymond.share.model.User;
+import com.example.raymond.share.notifications.NotificationList;
 import com.example.raymond.share.tripList.DriverFragment;
 import com.example.raymond.share.tripList.PassengerFragment;
+import com.example.raymond.share.tripList.TripHistory;
 import com.facebook.login.LoginManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,6 +44,15 @@ public class Homepage extends AppCompatActivity {
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ImageView notification = (ImageView) findViewById(R.id.notification);
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NotificationList.class);
+                startActivity(intent);
+            }
+        });
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setTabTextColors(Color.parseColor("#808080"), Color.parseColor("#3F51B5"));
@@ -86,11 +98,7 @@ public class Homepage extends AppCompatActivity {
 
                     case R.id.mycarpools:
                         Toast.makeText(getApplicationContext(), "My carpools Selected", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), SubActivity.class));
-                        return true;
-                    case R.id.friends:
-                        Toast.makeText(getApplicationContext(), "Friends Selected", Toast.LENGTH_SHORT).show();
-                        //startActivity(new Intent(getApplicationContext(), Friends.class));
+                        startActivity(new Intent(getApplicationContext(), TripHistory.class));
                         return true;
                     case R.id.messages:
                         Toast.makeText(getApplicationContext(), "Messages Selected", Toast.LENGTH_SHORT).show();
@@ -156,5 +164,11 @@ public class Homepage extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), UserProfile.class);
         intent.putExtra("id", Integer.toString(user.getId()));
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        user = null;
     }
 }

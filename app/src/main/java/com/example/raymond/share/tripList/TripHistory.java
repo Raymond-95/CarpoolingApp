@@ -1,15 +1,12 @@
 package com.example.raymond.share.tripList;
 
-
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.raymond.share.R;
 import com.example.raymond.share.jsonparser.ShareApi;
@@ -21,39 +18,33 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+public class TripHistory extends AppCompatActivity {
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class TripHistory extends Fragment {
-
+    private Toolbar toolbar;
     private RecyclerView tripList;
     private TripAdapter tripAdapter;
 
-    public TripHistory() {
-        // Required empty public constructor
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_trip_history);
 
-        // Inflate the layout for this fragment
-        View v =  inflater.inflate(R.layout.activity_trip_history, container, false);
+        // Initializing Toolbar and setting it as the actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("My Carpools");
 
-        tripList = (RecyclerView) v.findViewById(R.id.tripList);
-        tripList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        tripList = (RecyclerView) findViewById(R.id.tripList);
+        tripList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         tripAdapter = new TripAdapter();
         tripList.setAdapter(tripAdapter);
 
         loadData();
-
-        return v;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getActivity().getMenuInflater().inflate(R.menu.menu_card_demo, menu);
+        getMenuInflater().inflate(R.menu.menu_card_demo, menu);
         return true;
     }
 
@@ -74,7 +65,7 @@ public class TripHistory extends Fragment {
 
     public void loadData() {
 
-        ShareApi.init(getActivity())
+        ShareApi.init(this)
                 .getHistory()
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
