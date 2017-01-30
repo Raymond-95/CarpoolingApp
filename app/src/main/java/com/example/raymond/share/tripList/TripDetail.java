@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.example.raymond.share.DownloadImage;
 import com.example.raymond.share.EditTrip;
 import com.example.raymond.share.R;
 import com.example.raymond.share.UserProfile;
+import com.example.raymond.share.chat.Message;
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
@@ -32,9 +34,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class TripDetail extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private int id;
     private Trip tripInfo;
     private Button send;
+    private int temp_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class TripDetail extends AppCompatActivity {
 
                         //direct user to user profile
                         next(tripInfo.getUserId());
+                        chat(tripInfo.getUserId());
 
                         TextView name = (TextView) findViewById(R.id.name);
                         name.setText(tripInfo.getName());
@@ -171,17 +174,33 @@ public class TripDetail extends AppCompatActivity {
         return temp_time;
     }
 
-    public void next(int temp_id){
+    public void next(int id){
 
-        id = temp_id;
+        this.temp_id = id;
 
-        ImageView profile = (ImageView) findViewById(R.id.profile);
+        ImageButton profile = (ImageButton) findViewById(R.id.profile);
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), UserProfile.class);
-                intent.putExtra("id", Integer.toString(id));
+                intent.putExtra("id", Integer.toString(temp_id));
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void chat(int recipient){
+
+        this.temp_id = recipient;
+
+        ImageButton chat = (ImageButton) findViewById(R.id.chat);
+
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Message.class);
+                intent.putExtra("id", Integer.toString(temp_id));
                 startActivity(intent);
             }
         });

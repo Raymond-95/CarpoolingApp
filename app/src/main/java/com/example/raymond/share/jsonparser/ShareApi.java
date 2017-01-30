@@ -332,6 +332,32 @@ public class ShareApi {
 
             return this;
         }
+
+        public Builder sendMessage(
+                int id,
+                String message
+        ) {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/chat/send_message");
+
+            mClient.addParam("id", id);
+            mClient.addParam("message", message);
+
+            return this;
+        }
+
+        public Builder getMessage(
+                int id
+        ) {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/chat/get_message");
+
+            mClient.addParam("id", id);
+
+            return this;
+        }
     }
 }
 

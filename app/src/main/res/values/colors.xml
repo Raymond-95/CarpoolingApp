@@ -7,4 +7,5 @@
     <color name="white">#ffffff</color>
     <color name="colorSecondary">#56C5F0</color>
     <color name="turquoise">#32C7AE</color>
+    <color name="dark_grey">#727272</color>
 </resources>
