@@ -4,102 +4,139 @@ package com.example.raymond.share.chat;
  * Created by Shade on 5/9/2016.
  */
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.raymond.share.R;
 import com.example.raymond.share.model.Chat;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Chat> mItems;
-    private TextView item_message;
-    public MessageAdapter() {
-        mItems = new ArrayList<>();
-    }
-    private int myId;
-    private Context mContext;
+    private List<Chat> mChatList;
+    public static final int SENDER = 0;
+    public static final int RECIPIENT = 1;
 
-    public void addContext(Context context){
-        this.mContext = context;
+    public MessageAdapter(List<Chat> listOfFireChats) {
+        mChatList = listOfFireChats;
     }
 
-    public void add(Chat data) {
-        mItems.add(data);
-    }
-
-    public void addData(List<Chat> data, int id) {
-        if (data != null) {
-            for (Chat appEntry : data) {
-                mItems.add(appEntry);
-            }
-
-            notifyDataSetChanged();
-        }
-        this.myId = id;
-    }
-
-    public void setData(List<Chat> data) {
-        mItems.clear();
-        if (data != null) {
-            for (Chat appEntry : data) {
-                mItems.add(appEntry);
-            }
-        }
-    }
-
-    public void clear() {
-        mItems.clear();
-        notifyDataSetChanged();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder{
-
-        public int currentItem;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            item_message = (TextView)itemView.findViewById(R.id.single_message);
+    @Override
+    public int getItemViewType(int position) {
+        if(mChatList.get(position).getRecipientOrSenderStatus()==SENDER){
+            return SENDER;
+        }else {
+            return RECIPIENT;
         }
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.message, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        RecyclerView.ViewHolder viewHolder;
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
 
+        switch (viewType) {
+            case SENDER:
+                View viewSender = inflater.inflate(R.layout.layout_sender_message, viewGroup, false);
+                viewHolder= new ViewHolderSender(viewSender);
+                break;
+            case RECIPIENT:
+                View viewRecipient = inflater.inflate(R.layout.layout_recipient_message, viewGroup, false);
+                viewHolder=new ViewHolderRecipient(viewRecipient);
+                break;
+            default:
+                View viewSenderDefault = inflater.inflate(R.layout.layout_sender_message, viewGroup, false);
+                viewHolder= new ViewHolderSender(viewSenderDefault);
+                break;
+        }
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        Chat chat = mItems.get(position);
-
-        viewHolder.setIsRecyclable(false);
-
-        if (myId != chat.getSender()){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10, 10, 60, 2); // llp.setMargins(left, top, right, bottom);
-            item_message.setLayoutParams(params);
-            item_message.setTextColor(mContext.getResources().getColor(R.color.dark_grey));
-            item_message.setBackground(mContext.getResources().getDrawable(R.drawable.recipient_rounded_corners));
+        switch (viewHolder.getItemViewType()){
+            case SENDER:
+                ViewHolderSender viewHolderSender=(ViewHolderSender)viewHolder;
+                configureSenderView(viewHolderSender,position);
+                break;
+            case RECIPIENT:
+                ViewHolderRecipient viewHolderRecipient=(ViewHolderRecipient)viewHolder;
+                configureRecipientView(viewHolderRecipient,position);
+                break;
         }
 
-        item_message.setText(chat.getMessage());
+
+    }
+
+    private void configureSenderView(ViewHolderSender viewHolderSender, int position) {
+        Chat senderMessage= mChatList.get(position);
+        viewHolderSender.getSenderMessageTextView().setText(senderMessage.getMessage());
+    }
+
+    private void configureRecipientView(ViewHolderRecipient viewHolderRecipient, int position) {
+        Chat recipientMessage = mChatList.get(position);
+        viewHolderRecipient.getRecipientMessageTextView().setText(recipientMessage.getMessage());
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mChatList.size();
+    }
+
+
+    public void refillAdapter(Chat newMessage){
+
+        /*add new message chat to list*/
+        mChatList.add(newMessage);
+
+        /*refresh view*/
+        notifyItemInserted(getItemCount()-1);
+    }
+
+
+    public void cleanUp() {
+        mChatList.clear();
+    }
+
+
+    /*==============ViewHolder===========*/
+
+    /*ViewHolder for Sender*/
+
+    public class ViewHolderSender extends RecyclerView.ViewHolder {
+
+        private TextView mSenderMessageTextView;
+
+        public ViewHolderSender(View itemView) {
+            super(itemView);
+            mSenderMessageTextView =(TextView)itemView.findViewById(R.id.text_view_sender_message);
+        }
+
+        public TextView getSenderMessageTextView() {
+            return mSenderMessageTextView;
+        }
+
+    }
+
+
+    /*ViewHolder for Recipient*/
+    public class ViewHolderRecipient extends RecyclerView.ViewHolder {
+
+        private TextView mRecipientMessageTextView;
+
+        public ViewHolderRecipient(View itemView) {
+            super(itemView);
+            mRecipientMessageTextView=(TextView)itemView.findViewById(R.id.text_view_recipient_message);
+        }
+
+        public TextView getRecipientMessageTextView() {
+            return mRecipientMessageTextView;
+        }
+
     }
 }

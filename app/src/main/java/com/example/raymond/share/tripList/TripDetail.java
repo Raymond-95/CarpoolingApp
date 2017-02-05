@@ -144,7 +144,7 @@ public class TripDetail extends AppCompatActivity {
                                 }
                             });
                         }
-                        else if (from.equals("history") || tripInfo.getStatus().equals("not available")){
+                        else if (from.equals("history") || !tripInfo.getStatus().equals("available")){
 
                             RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
                             layout.removeView(send);

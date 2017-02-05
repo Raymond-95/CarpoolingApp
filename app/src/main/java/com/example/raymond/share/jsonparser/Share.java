@@ -94,6 +94,7 @@ public class Share {
         public static final String PREF_KEY_USER_PHONE_NUM = "Share.user.phonenum";
         public static final String PREF_KEY_USER_PROFILE_URL = "Share.user.profileUrl";
         public static final String PREF_KEY_USER_IMAGE_URL = "Share.user.imageUrl";
+        public static final String PREF_KEY_USER_ROLE = "Share.user.role";
         public static final String PREF_KEY_USER_TOKEN = "Share.user.token";
         
         public static final String PREF_KEY_UUID = "Share.uuid";
@@ -181,6 +182,15 @@ public class Share {
 
         public void saveUserImageUrl(String value) {
             _prefsEditor.putString(PREF_KEY_USER_IMAGE_URL, value);
+            _prefsEditor.commit();
+        }
+
+        public String getUserRole() {
+            return _sharedPrefs.getString(PREF_KEY_USER_ROLE, null);
+        }
+
+        public void saveUserRole(String value) {
+            _prefsEditor.putString(PREF_KEY_USER_ROLE, value);
             _prefsEditor.commit();
         }
 

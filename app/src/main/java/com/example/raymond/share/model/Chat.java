@@ -10,8 +10,8 @@ import org.json.JSONObject;
  */
 public class Chat {
 
-    int sender, recipient;
-    String message;
+    int sender, recipient, mRecipientOrSenderStatus, user_id;
+    String message, name, imageUrl;
 
     public Chat(){}
 
@@ -21,10 +21,36 @@ public class Chat {
         this.message = message;
     }
 
+    public Chat(int user_id, String name, String imageUrl, int sender, String message){
+        this.user_id = user_id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.sender = sender;
+        this.message = message;
+    }
+
     public Chat(JSONObject response){
 
         try {
             response = response.getJSONObject("result");
+
+            try {
+                this.user_id = response.getInt("id");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "User id is null");
+            }
+
+            try {
+                this.name = response.getString("name");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Name is null");
+            }
+
+            try {
+                this.imageUrl = response.getString("imageUrl");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "ImageUrl is null");
+            }
 
             try {
                 this.sender = response.getInt("sender");
@@ -45,6 +71,24 @@ public class Chat {
             }
 
         } catch (JSONException ex) {
+
+            try {
+                this.user_id = response.getInt("id");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "User id is null");
+            }
+
+            try {
+                this.name = response.getString("name");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Name is null");
+            }
+
+            try {
+                this.imageUrl = response.getString("imageUrl");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "ImageUrl is null");
+            }
 
             try {
                 this.sender = response.getInt("sender");
@@ -77,4 +121,18 @@ public class Chat {
     public String getMessage() {
         return message;
     }
+
+    public void setRecipientOrSenderStatus(int recipientOrSenderStatus) {
+        this.mRecipientOrSenderStatus = recipientOrSenderStatus;
+    }
+
+    public int getRecipientOrSenderStatus() {
+        return mRecipientOrSenderStatus;
+    }
+
+    public int getUserId() {return user_id;}
+
+    public String getName() {return name;}
+
+    public String getImageUrl() {return imageUrl;}
 }

@@ -15,10 +15,27 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPane">
 
-        <include
+        <android.support.v7.widget.Toolbar
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:fitsSystemWindows="true"
             android:id="@+id/toolbar"
-            layout="@layout/toolbar_layout">
-        </include>
+            app:theme="@style/CustomToolBar"
+            app:titleTextAppearance="@style/CustomToolBar.TitleText">
+
+            <ImageButton
+                android:id="@+id/addGuardian"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="end"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/addguardian"/>
+
+        </android.support.v7.widget.Toolbar>
 
         <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -123,6 +140,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="16sp"
                     android:id="@+id/item_source"
                     android:fontFamily="sans-serif-medium"
                     android:layout_toLeftOf="@+id/to"
@@ -144,6 +162,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="16sp"
                     android:layout_toRightOf="@+id/to"
                     android:id="@+id/item_destination"
                     android:fontFamily="sans-serif-medium"

@@ -21,9 +21,8 @@ import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.json.JSONObject;
 
@@ -47,7 +46,7 @@ public class RegTrip extends AppCompatActivity {
     private static String date = "";
     private int hour = calendar.get(Calendar.HOUR_OF_DAY);
     private int minute = calendar.get(Calendar.MINUTE);
-    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static int PLACE_PICKER_REQUEST = 1;
     ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.reg_trip";
 
@@ -70,10 +69,9 @@ public class RegTrip extends AppCompatActivity {
                 currentEditText = source;
 
                 try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                    .build(RegTrip.this);
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                    startActivityForResult(builder.build(RegTrip.this), PLACE_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -91,10 +89,9 @@ public class RegTrip extends AppCompatActivity {
                 currentEditText = destination;
 
                 try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                                    .build(RegTrip.this);
-                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                    startActivityForResult(builder.build(RegTrip.this), PLACE_PICKER_REQUEST);
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
@@ -181,9 +178,9 @@ public class RegTrip extends AppCompatActivity {
                 }
 
                 if(!source.getText().toString().trim().equals("") &&
-                    !destination.getText().toString().trim().equals("") &&
-                    !trip_date.getText().toString().trim().equals("")  &&
-                    !trip_time.getText().toString().trim().equals("")){
+                        !destination.getText().toString().trim().equals("") &&
+                        !trip_date.getText().toString().trim().equals("")  &&
+                        !trip_time.getText().toString().trim().equals("")){
 
                     information = (EditText) findViewById(R.id.information);
 
@@ -237,18 +234,11 @@ public class RegTrip extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
+                Place place = PlacePicker.getPlace(data, this);
                 currentEditText.setText(place.getName());
                 Log.i(TAG, "Place: " + place.getName());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
-
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
             }
         }
     }

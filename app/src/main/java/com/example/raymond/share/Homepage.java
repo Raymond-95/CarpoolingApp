@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.raymond.share.chat.ChatUsers;
 import com.example.raymond.share.model.User;
 import com.example.raymond.share.notifications.NotificationList;
 import com.example.raymond.share.tripList.DriverFragment;
@@ -102,7 +103,7 @@ public class Homepage extends AppCompatActivity {
                         return true;
                     case R.id.messages:
                         Toast.makeText(getApplicationContext(), "Messages Selected", Toast.LENGTH_SHORT).show();
-                        //startActivity(new Intent(getApplicationContext(), Messages.class));
+                        startActivity(new Intent(getApplicationContext(), ChatUsers.class));
                         return true;
                     case R.id.logout:
                         LoginManager.getInstance().logOut();

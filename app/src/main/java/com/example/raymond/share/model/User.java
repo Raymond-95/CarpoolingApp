@@ -17,17 +17,18 @@ import org.parceler.Parcel;
 @Parcel
 public class User {
     int id;
-    String email, name, phonenum, profileUrl, imageUrl, token;
+    String email, name, phonenum, profileUrl, imageUrl, role,token;
 
     public User(){}
 
-    public User(int id, String email, String name, String phonenum, String profileUrl, String imageUrl, String token){
+    public User(int id, String email, String name, String phonenum, String profileUrl, String imageUrl, String role, String token){
         this.id = id;
         this.email = email;
         this.name = name;
         this.phonenum = phonenum;
         this.profileUrl = profileUrl;
         this.imageUrl = imageUrl;
+        this.role = role;
         this.token = token;
     }
 
@@ -70,6 +71,12 @@ public class User {
                 this.imageUrl = response.getString("imageUrl");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Image url is null");
+            }
+
+            try {
+                this.role = response.getString("role");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Role is null");
             }
 
             try {
@@ -117,6 +124,12 @@ public class User {
             }
 
             try {
+                this.role = response.getString("role");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Role is null");
+            }
+
+            try {
                 this.token = response.getString("token");
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "token is null");
@@ -153,6 +166,11 @@ public class User {
     }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) { this.role = role; }
+
     public String getToken() {return token; }
     public void setToken(String token) { this.token = token; }
 
@@ -165,6 +183,7 @@ public class User {
         appPreferences.saveUserPhonenum(phonenum);
         appPreferences.saveUserProfileUrl(profileUrl);
         appPreferences.saveUserImageUrl(imageUrl);
+        appPreferences.saveUserRole(role);
         appPreferences.saveUserToken(token);
     }
 
@@ -177,6 +196,7 @@ public class User {
         this.phonenum = appPreferences.getUserPhonenum();
         this.profileUrl = appPreferences.getUserProfileUrl();
         this.imageUrl = appPreferences.getUserImageUrl();
+        this.role = appPreferences.getUserRole();
         this.token = appPreferences.getUserToken();
 
         return this;
@@ -191,6 +211,7 @@ public class User {
         appPreferences.saveUserPhonenum("");
         appPreferences.saveUserProfileUrl("");
         appPreferences.saveUserImageUrl("");
+        appPreferences.saveUserRole("");
         appPreferences.saveUserToken("");
     }
 }

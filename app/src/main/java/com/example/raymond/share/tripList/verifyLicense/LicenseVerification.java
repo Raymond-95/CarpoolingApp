@@ -16,8 +16,6 @@ import android.widget.Button;
 
 import com.example.raymond.share.R;
 
-import java.util.ArrayList;
-
 public class LicenseVerification extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -66,8 +64,6 @@ public class LicenseVerification extends AppCompatActivity {
                                         finalResult(html);
                                     }
                                 });
-
-                        tempView.loadUrl("javascript: document.getElementById('resultAjax').innerHTML;");
                     }
                 });
             }
@@ -91,29 +87,33 @@ public class LicenseVerification extends AppCompatActivity {
         }
         else{
 
-            ArrayList<String> licenseInfo = new ArrayList<String>();
+            String[] licenseInfo = new String [7];
 
             //get name
-            licenseInfo.add(getInfo(html, 0));
+            licenseInfo[0] = getInfo(html, 0);
 
             //get IC number
-            licenseInfo.add(getInfo(html, 124));
+            licenseInfo[1] = getInfo(html, 124);
 
             //get Category ID
-            licenseInfo.add(getInfo(html, 120));
+            licenseInfo[2] = getInfo(html, 120);
 
             //get License Type
-            licenseInfo.add(getInfo(html, 1287));
+            licenseInfo[3] = getInfo(html, 1078);
+
+            //get License Class
+            licenseInfo[4] = getInfo(html, 204);
 
             //get License issue date
-            licenseInfo.add(getInfo(html, 319));
+            licenseInfo[5] = getInfo(html, 319);
 
             //get License end date
-            licenseInfo.add(getInfo(html, 114));
+            licenseInfo[6] = getInfo(html, 114);
 
             Intent intent = new Intent(getApplicationContext(), LicenseInfo.class);
             intent.putExtra("license_info", licenseInfo);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -132,7 +132,7 @@ public class LicenseVerification extends AppCompatActivity {
         }
 
         String value = object.toString().substring(0, object.toString().length()-1);
-        Log.e("Object", value);
+        Log.d("Object", value);
 
         return value;
     }

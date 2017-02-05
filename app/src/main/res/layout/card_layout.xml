@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/item_source"
             android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="14sp"
             android:fontFamily="sans-serif-medium"
             android:layout_marginTop="10dp"
             android:layout_alignParentEnd="true"
@@ -69,7 +69,7 @@
             android:layout_toRightOf="@+id/profilePic"
             android:layout_below="@+id/to"
             android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="14sp"
             android:fontFamily="sans-serif-medium"
             android:layout_alignParentEnd="true" />
 

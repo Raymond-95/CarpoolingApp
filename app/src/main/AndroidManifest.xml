@@ -63,7 +63,7 @@
         <activity android:name=".tripList.TripDetail" />
         <activity android:name=".tripList.TripHistory" />
         <activity android:name=".EditTrip" />
-        <activity android:name=".tripList.webview.LicenseVerification" />
+        <activity android:name=".tripList.verifyLicense.LicenseVerification" />
 
         <service android:name=".notifications.FirebaseMessageService">
             <intent-filter>
@@ -78,7 +78,10 @@
 
         <activity android:name=".notifications.NotificationList" />
         <activity android:name=".chat.chat" />
-        <activity android:name=".chat.Message"></activity>
+        <activity android:name=".chat.Message" />
+        <activity android:name=".tripList.verifyLicense.LicenseInfo" />
+        <activity android:name=".chat.ChatUsers" />
+        <activity android:name=".addGuardian.AddGuardian"></activity>
     </application>
 
 </manifest>

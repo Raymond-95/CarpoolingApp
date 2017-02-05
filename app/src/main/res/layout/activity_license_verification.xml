@@ -4,16 +4,29 @@ xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/container"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".tripList.webview.LicenseVerification">
+android:background="@color/dark_grey"
+tools:context=".tripList.verifyLicense.LicenseVerification">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_layout" />
 
-        <WebView
-            android:id="@+id/webview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"/>
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/submit" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Submit"
+        android:id="@+id/submit"
+        android:textColor="@color/white"
+        android:layout_margin="10dp"
+        android:background="@drawable/completely_rounded"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

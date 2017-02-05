@@ -180,17 +180,14 @@ public class ShareApi {
             return this;
         }
 
-//        public Builder verifyDrivingLicense(
-//                int selection
-//        ) {
-//            mClient.setExitWhen401(false);
-//            mClient.setMethod(ShareRestClient.POST);
-//            mClient.setEndPoint("/accounts/verify_license");
-//
-//            mClient.addParam("catid", selection);
-//
-//            return this;
-//        }
+        public Builder updateRole()
+        {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/accounts/update_role");
+
+            return this;
+        }
 
         public Builder registerTrip(
                 String source,
@@ -355,6 +352,13 @@ public class ShareApi {
             mClient.setEndPoint("/chat/get_message");
 
             mClient.addParam("id", id);
+
+            return this;
+        }
+
+        public Builder getChatUsers() {
+            mClient.setMethod(ShareRestClient.GET);
+            mClient.setEndPoint("/chat/get_chat_users");
 
             return this;
         }
