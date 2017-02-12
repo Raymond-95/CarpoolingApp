@@ -113,7 +113,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         item_destination.setText(currentRequest.getDestination());
         new DownloadImage(item_image).execute(currentRequest.getImageUrl());
 
-        if (currentRequest.getStatus().equals("pending")){
+        if (currentRequest.getStatus().equals("pending") && currentRequest.getType().equals("triprequest")){
 
             item_body.setText("Hi, I would like to take a ride with you.");
 
@@ -132,16 +132,50 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 }
             });
         }
+        else if (currentRequest.getStatus().equals("pending") && currentRequest.getType().equals("guardian")){
+
+            item_body.setText("My angle, please protect me from dangers");
+
+            item_accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateGuardian(currentRequest.getId(), currentRequest.getTripId(), currentRequest.getUserId(), "approved");
+                    ((Activity)view.getContext()).finish();
+                    ((Activity)view.getContext()).startActivity(new Intent(view.getContext(), NotificationList.class));
+                }
+            });
+
+            item_ignore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateGuardian(currentRequest.getId(), currentRequest.getTripId(), currentRequest.getUserId(), "cancelled");
+                    ((Activity)view.getContext()).finish();
+                    ((Activity)view.getContext()).startActivity(new Intent(view.getContext(), NotificationList.class));
+                }
+            });
+        }
         else if (currentRequest.getStatus().equals("cancelled")){
 
-            item_body.setText("Hope that we can travel together for the next trip.");
+            if (currentRequest.getType().equals("triprequest")){
+                item_body.setText("Hope that we can travel together for the next trip.");
+            }
+            else{
+                item_body.setText("Hope that you can taking good care of me next time.");
+            }
+
 
             layout.removeView(item_accept);
             layout.removeView(item_ignore);
         }
         else if (currentRequest.getStatus().equals("approved")){
 
-            item_body.setText("I'm so glad that we can travel together.");
+            if (currentRequest.getType().equals("triprequest")){
+                item_body.setText("I'm so glad that we can travel together.");
+            }
+            else{
+                item_body.setText("I'm so happy that you are very concern about me.");
+            }
+
 
             layout.removeView(item_accept);
             layout.removeView(item_ignore);
@@ -167,6 +201,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Log.d("Share", "Request is updated.");
                         ((Activity)view.getContext()).finish();
                         ((Activity)view.getContext()).startActivity(new Intent(view.getContext(), NotificationList.class));
+                    }
+                    @Override
+                    public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
+                        Log.e("Share", e.toString());
+                    }
+
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
+    }
+
+    public void updateGuardian(int id, int trip_id, int guardian, String status) {
+
+        mProgressDialog = ShareApi.init(view.getContext())
+                .setProgressDialog(mProgressDialog)
+                .updateGuardian(id, trip_id, guardian, status)
+                .call(new ShareApi.CustomJsonResponseHandler() {
+
+                    @Override
+                    public void onSuccess(JSONObject response, ShareJSON meta) {
+
+                        Log.d("Share", "Request is updated.");
                     }
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {

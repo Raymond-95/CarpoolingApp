@@ -19,7 +19,7 @@ import com.example.raymond.share.model.Trip;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private List<Trip> mItems;
     private ImageView item_image;
@@ -27,10 +27,11 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     private TextView item_source;
     private TextView item_destination;
     private TextView item_date;
-    private ImageView item_status;
+    private ImageView caution;
+    private TextView item_info;
     private String from;
 
-    public TripAdapter() {
+    public SearchAdapter() {
         mItems = new ArrayList<>();
     }
 
@@ -77,7 +78,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
             item_source = (TextView)itemView.findViewById(R.id.item_source);
             item_destination = (TextView)itemView.findViewById(R.id.item_destination);
             item_date = (TextView)itemView.findViewById(R.id.item_date);
-            item_status = (ImageView)itemView.findViewById(R.id.item_status);
+            caution = (ImageView)itemView.findViewById(R.id.caution);
+            item_info = (TextView)itemView.findViewById(R.id.item_info);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
@@ -99,7 +101,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.card_layout, viewGroup, false);
+                .inflate(R.layout.search_result, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
 
         return viewHolder;
@@ -117,20 +119,13 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
         item_date.setText(currentTrip.getDate());
         new DownloadImage(item_image).execute(currentTrip.getImageUrl());
 
-        if (from.equals("history")){
-
-            if (currentTrip.getStatus().equals("pending")){
-                item_status.setImageResource(R.drawable.pending);
-                item_status.setVisibility(View.VISIBLE);
-            }
-            else if (currentTrip.getStatus().equals("approved")){
-                item_status.setImageResource(R.drawable.checked);
-                item_status.setVisibility(View.VISIBLE);
-            }
-            else if (currentTrip.getStatus().equals("cancelled")){
-                item_status.setImageResource(R.drawable.cross);
-                item_status.setVisibility(View.VISIBLE);
-            }
+        if (Float.parseFloat(currentTrip.getDistance()) > 0){
+            String info = "Extra " + currentTrip.getDistance() + "km, " + currentTrip.getDuration();
+            item_info.setText(info);
+        }
+        else{
+            caution.setVisibility(View.GONE);
+            item_info.setVisibility(View.GONE);
         }
     }
 

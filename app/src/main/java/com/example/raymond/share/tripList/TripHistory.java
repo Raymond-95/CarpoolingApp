@@ -1,5 +1,6 @@
 package com.example.raymond.share.tripList;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.raymond.share.R;
 import com.example.raymond.share.jsonparser.ShareApi;
@@ -23,6 +25,7 @@ public class TripHistory extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView tripList;
     private TripAdapter tripAdapter;
+    ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,14 @@ public class TripHistory extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("My Carpools");
+
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         tripList = (RecyclerView) findViewById(R.id.tripList);
         tripList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -65,7 +76,8 @@ public class TripHistory extends AppCompatActivity {
 
     public void loadData() {
 
-        ShareApi.init(this)
+        mProgressDialog =ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
                 .getHistory()
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
@@ -95,6 +107,18 @@ public class TripHistory extends AppCompatActivity {
 
                     }
 
-                });
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

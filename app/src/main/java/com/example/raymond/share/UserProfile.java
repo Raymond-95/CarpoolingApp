@@ -46,6 +46,14 @@ public class UserProfile extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle("Profile");
 
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         layout = (RelativeLayout) findViewById(R.id.top);
         send = (Button) findViewById(R.id.send);
         layout.removeView(send);

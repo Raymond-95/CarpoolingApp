@@ -3,20 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.raymond.share.addGuardian.AddGuardian">
+    android:background="#606060"
+    tools:context=".tripList.SearchList">
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_layout">
-    </include>
+        layout="@layout/toolbar_layout" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/chatusers"
+        android:id="@+id/searchList"
         android:layout_width="match_parent"
-        android:layout_height="410dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar">
 
     </android.support.v7.widget.RecyclerView>

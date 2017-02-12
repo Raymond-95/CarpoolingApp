@@ -60,6 +60,14 @@ public class RegTrip extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Add Trip");
 
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         source = (EditText) findViewById(R.id.source);
 
         source.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +296,7 @@ public class RegTrip extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        mProgressDialog = null;
         trip_date = null;
         date = null;
     }

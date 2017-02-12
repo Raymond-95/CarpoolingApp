@@ -49,10 +49,9 @@ public class FirebaseMessageService extends FirebaseMessagingService{
 
         intent = null;
 
-        if (body.equals("Hi, I would like to take a ride with you.")){
-            intent = new Intent(this, NotificationList.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        }
+        intent = new Intent(this, NotificationList.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 
         sendNotification(title, body);
 

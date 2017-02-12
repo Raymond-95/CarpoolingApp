@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
@@ -12,7 +12,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".timer.ChronometerApplication">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -77,11 +78,15 @@
         </service>
 
         <activity android:name=".notifications.NotificationList" />
-        <activity android:name=".chat.chat" />
         <activity android:name=".chat.Message" />
         <activity android:name=".tripList.verifyLicense.LicenseInfo" />
         <activity android:name=".chat.ChatUsers" />
-        <activity android:name=".addGuardian.AddGuardian"></activity>
+        <activity android:name=".addGuardian.AddGuardian" />
+        <activity android:name=".tripList.Search" />
+        <activity android:name=".tripList.SearchList"></activity>
+        <activity android:name=".timer.Timer"></activity>
     </application>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

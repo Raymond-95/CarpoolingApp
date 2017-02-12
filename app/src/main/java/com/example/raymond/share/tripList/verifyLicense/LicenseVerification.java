@@ -36,6 +36,14 @@ public class LicenseVerification extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("License Verification");
 
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         mWebView = (WebView) findViewById(R.id.webview);
 
         WebSettings webSettings = mWebView.getSettings();

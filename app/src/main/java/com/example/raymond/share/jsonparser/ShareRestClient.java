@@ -38,7 +38,7 @@ public class ShareRestClient {
 
     private static final String TAG = "Share.RestClient";
 	//private static final String API_URL = "https://api-v4.getShare.com";
-    public static final String WEB_URL = "http://192.168.1.173:8000";
+    public static final String WEB_URL = "http://192.168.1.214:8000";
     public static final String API_URL = WEB_URL + "/api";
 
     public static final int RC_AUTH = 9722;
@@ -147,7 +147,7 @@ public class ShareRestClient {
     public void get() {
         Log.d(TAG, mParams.toString());
         if (checkInternetConnection()) {
-            Log.e("testing", getAbsoluteUrl(mEndPoint));
+            Log.e("URL", getAbsoluteUrl(mEndPoint));
             mClient.get(getAbsoluteUrl(mEndPoint), mParams, mJsonHttpResponseHandler);
         }
     }
@@ -155,7 +155,7 @@ public class ShareRestClient {
     public void post() {
         Log.d(TAG, mParams.toString());
         if (checkInternetConnection()) {
-            Log.e("testing", getAbsoluteUrl(mEndPoint));
+            Log.e("URL", getAbsoluteUrl(mEndPoint));
             mClient.post(getAbsoluteUrl(mEndPoint), mParams, mJsonHttpResponseHandler);
         }
     }

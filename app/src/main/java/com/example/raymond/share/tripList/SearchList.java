@@ -1,41 +1,42 @@
-package com.example.raymond.share.chat;
+package com.example.raymond.share.tripList;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.raymond.share.R;
 import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
-import com.example.raymond.share.model.Chat;
-import com.example.raymond.share.model.User;
+import com.example.raymond.share.model.Trip;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatUsers extends AppCompatActivity {
+public class SearchList extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private RecyclerView chatList;
-    private ChatAdapter chatAdapter;
+    private RecyclerView searchList;
+    private SearchAdapter searchAdapter;
+    ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_users);
+        setContentView(R.layout.activity_search_list);
 
         // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Messages");
+        setTitle("Results");
 
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
@@ -45,12 +46,16 @@ public class ChatUsers extends AppCompatActivity {
             }
         });
 
-        chatList = (RecyclerView) findViewById(R.id.chatusers);
-        chatList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        chatAdapter = new ChatAdapter();
-        chatList.setAdapter(chatAdapter);
+        searchList = (RecyclerView) findViewById(R.id.searchList);
+        searchList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        searchAdapter = new SearchAdapter();
+        searchList.setAdapter(searchAdapter);
 
-        loadData();
+        String source = getIntent().getStringExtra("source");
+        String destination = getIntent().getStringExtra("destination");
+        String role = getIntent().getStringExtra("role");
+
+        loadData(source, destination, role);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,28 +79,32 @@ public class ChatUsers extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadData() {
-        ShareApi.init(this)
-                .getChatUsers()
+    public void loadData(String source, String destination, String role) {
+
+        mProgressDialog =ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
+                .search(source, destination, role)
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
                     @Override
                     public void onSuccess(JSONObject response, ShareJSON meta) {
 
-                        List<Chat> chats = new ArrayList<>();
+                        List<Trip> trips = new ArrayList<>();
 
                         try {
 
                             for (int i = 0; i < meta.getResults().length(); i++) {
 
-                                chats.add(new Chat(meta.getResults().getJSONObject(i)));
-
+                                trips.add(new Trip(meta.getResults().getJSONObject(i)));
                             }
 
-                            chatAdapter.addData(chats);
-
-                            User user = new User().getUserAccount(getApplicationContext());
-                            chatAdapter.addUser(user);
+                            if (!trips.isEmpty()){
+                                searchAdapter.addData(trips);
+                                searchAdapter.getFrom("fragment");
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "No result", Toast.LENGTH_SHORT).show();
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -104,9 +113,21 @@ public class ChatUsers extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
-                        Log.e("Share.ChatUser", "Cannot retrieve data");
+
                     }
 
-                });
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

@@ -16,9 +16,9 @@
         </item>
 
         <item
-            android:id="@+id/friends"
-            android:title="Friends"
-            android:icon="@drawable/friends">
+            android:id="@+id/guardians"
+            android:title="Guardians"
+            android:icon="@drawable/guardian">
         </item>
 
         <item

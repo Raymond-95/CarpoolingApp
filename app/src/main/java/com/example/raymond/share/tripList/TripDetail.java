@@ -1,5 +1,6 @@
 package com.example.raymond.share.tripList;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.raymond.share.DownloadImage;
@@ -22,6 +22,7 @@ import com.example.raymond.share.jsonparser.ShareApi;
 import com.example.raymond.share.jsonparser.ShareJSON;
 import com.example.raymond.share.model.Trip;
 import com.example.raymond.share.model.User;
+import com.example.raymond.share.timer.Timer;
 
 import org.json.JSONObject;
 
@@ -37,6 +38,7 @@ public class TripDetail extends AppCompatActivity {
     private Trip tripInfo;
     private Button send;
     private int temp_id;
+    ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class TripDetail extends AppCompatActivity {
 
     public void getTrip(int id) {
 
-        ShareApi.init(getApplicationContext())
+        mProgressDialog =ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
                 .getTrip(id)
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
@@ -61,6 +64,14 @@ public class TripDetail extends AppCompatActivity {
 
                         toolbar = (Toolbar) findViewById(R.id.toolbar);
                         setSupportActionBar(toolbar);
+
+                        toolbar.setNavigationIcon(R.drawable.back);
+                        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view) {
+                                onBackPressed();
+                            }
+                        });
 
                         if (tripInfo.getRole().equals("driver"))
                             toolbar.setTitle("Driver");
@@ -107,6 +118,7 @@ public class TripDetail extends AppCompatActivity {
                         if (tripInfo.getUserId() == user.getId() && from.equals("fragment") && tripInfo.getStatus().equals("available")){
 
                             send.setText("EDIT");
+                            send.setVisibility(View.VISIBLE);
                             send.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -117,16 +129,30 @@ public class TripDetail extends AppCompatActivity {
                                 }
                             });
                         }
-                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment") && tripInfo.getStatus().equals("available")){
+                        else if (tripInfo.getUserId() != user.getId() && from.equals("fragment") && tripInfo.getStatus().equals("available") ||tripInfo.getStatus().equals("cancelled") ){
 
                             send.setText("SEND REQUEST");
+                            send.setVisibility(View.VISIBLE);
                             send.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
-                                    sendTripRequest(tripInfo.getId());
-                                    RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
-                                    layout.removeView(send);
+                                    sendRequest(tripInfo.getId(), "triprequest");
+                                    send.setVisibility(View.GONE);
+
+                                }
+                            });
+                        }
+                        else if (tripInfo.getUserId() != user.getId() && from.equals("history") && tripInfo.getStatus().equals("approved")){
+
+                            send.setText("START TRIP");
+                            send.setVisibility(View.VISIBLE);
+                            send.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    Intent intent = new Intent(getApplicationContext(), Timer.class);
+                                    startActivity(intent);
 
                                 }
                             });
@@ -134,6 +160,7 @@ public class TripDetail extends AppCompatActivity {
                         else if (tripInfo.getUserId() == user.getId() && tripInfo.getStatus().equals("available") && from.equals("history")){
 
                             send.setText("EDIT");
+                            send.setVisibility(View.VISIBLE);
                             send.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -144,11 +171,20 @@ public class TripDetail extends AppCompatActivity {
                                 }
                             });
                         }
-                        else if (from.equals("history") || !tripInfo.getStatus().equals("available")){
 
-                            RelativeLayout layout = (RelativeLayout) findViewById(R.id.tripDetail);
-                            layout.removeView(send);
+                        final ImageButton addGuardian = (ImageButton) findViewById(R.id.addGuardian);
+
+                        if (tripInfo.getStatus().equals("approved")){
+                            addGuardian.setVisibility(View.VISIBLE);
                         }
+
+                        addGuardian.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                sendRequest(tripInfo.getId(), "guardian");
+                                addGuardian.setVisibility(View.GONE);
+                            }
+                        });
                     }
 
                     @Override
@@ -156,7 +192,9 @@ public class TripDetail extends AppCompatActivity {
 
                     }
 
-                });
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
     }
 
     public String time(String temp){
@@ -206,10 +244,11 @@ public class TripDetail extends AppCompatActivity {
         });
     }
 
-    public void sendTripRequest(int id) {
+    public void sendRequest(int id, String type) {
 
-        ShareApi.init(getApplicationContext())
-                .sendTripRequest(id)
+        mProgressDialog =ShareApi.init(this)
+                .setProgressDialog(mProgressDialog)
+                .sendRequest(id, type)
                 .call(new ShareApi.CustomJsonResponseHandler() {
 
                     @Override
@@ -222,6 +261,18 @@ public class TripDetail extends AppCompatActivity {
                         Log.e("Share", e.toString());
                     }
 
-                });
+                })
+                .keepProgressDialog()
+                .getProgressDialog();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 }

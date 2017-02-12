@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.example.raymond.share.R;
 import com.example.raymond.share.jsonparser.ShareApi;
@@ -32,6 +33,14 @@ public class NotificationList extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("Notifications");
+
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         notificationList = (RecyclerView) findViewById(R.id.notificationList);
         notificationList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

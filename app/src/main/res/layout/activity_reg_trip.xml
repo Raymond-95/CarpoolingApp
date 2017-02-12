@@ -54,7 +54,7 @@
             android:layout_alignParentEnd="true" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:id="@+id/source"
             android:padding="10dp"
@@ -88,7 +88,7 @@
             android:layout_alignParentEnd="true" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:id="@+id/destination"
             android:padding="10dp"

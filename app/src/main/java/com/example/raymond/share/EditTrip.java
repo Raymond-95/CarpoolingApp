@@ -63,6 +63,14 @@ public class EditTrip extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("Edit Trip");
 
+        toolbar.setNavigationIcon(R.drawable.back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         source = (EditText) findViewById(R.id.source);
         destination = (EditText) findViewById(R.id.destination);
         trip_date = (EditText) findViewById(R.id.date);

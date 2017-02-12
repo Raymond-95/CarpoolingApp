@@ -265,14 +265,16 @@ public class ShareApi {
             return this;
         }
 
-        public Builder sendTripRequest(
-                int id
+        public Builder sendRequest(
+                int id,
+                String type
         ) {
             mClient.setExitWhen401(false);
             mClient.setMethod(ShareRestClient.POST);
-            mClient.setEndPoint("/notification/send_trip_request");
+            mClient.setEndPoint("/notification/send_request");
 
             mClient.addParam("id", id);
+            mClient.addParam("type", type);
 
             return this;
         }
@@ -359,6 +361,47 @@ public class ShareApi {
         public Builder getChatUsers() {
             mClient.setMethod(ShareRestClient.GET);
             mClient.setEndPoint("/chat/get_chat_users");
+
+            return this;
+        }
+
+        public Builder updateGuardian(
+                int id,
+                int trip_id,
+                int guardian,
+                String status
+        ) {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/guardian/update_guardian/" + id);
+
+            mClient.addParam("id", id);
+            mClient.addParam("trip_id", trip_id);
+            mClient.addParam("guardian", guardian);
+            mClient.addParam("status", status);
+
+            return this;
+        }
+
+        public Builder getGuardians() {
+            mClient.setMethod(ShareRestClient.GET);
+            mClient.setEndPoint("/guardian/get_guardians");
+
+            return this;
+        }
+
+        public Builder search(
+                String source,
+                String destination,
+                String role
+        ) {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/trip/search");
+
+            mClient.addParam("source", source);
+            mClient.addParam("destination", destination);
+            mClient.addParam("role", role);
 
             return this;
         }

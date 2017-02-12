@@ -15,11 +15,11 @@ public class TripRequest {
 
     int id, user_id, trip_id;
 
-    String name, imageUrl, status, source, destination;
+    String name, imageUrl, status, source, destination, type;
 
     public TripRequest(){}
 
-    public TripRequest(int id, int user_id, int trip_id, String name, String imageUrl, String status, String source, String destination){
+    public TripRequest(int id, int user_id, int trip_id, String name, String imageUrl, String status, String source, String destination, String type){
         this.id = id;
         this.user_id = user_id;
         this.trip_id = trip_id;
@@ -28,6 +28,7 @@ public class TripRequest {
         this.status = status;
         this.source = source;
         this.destination = destination;
+        this.type = type;
     }
 
     public TripRequest(JSONObject response) {
@@ -83,6 +84,12 @@ public class TripRequest {
                 Log.d(getClass().getName(), "Destination is null");
             }
 
+            try {
+                this.type = response.getString("type");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Type is null");
+            }
+
         } catch (JSONException ex) {
 
             try {
@@ -133,6 +140,12 @@ public class TripRequest {
                 Log.d(getClass().getName(), "Destination is null");
             }
 
+            try {
+                this.type = response.getString("type");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Type is null");
+            }
+
         }
     }
 
@@ -143,36 +156,21 @@ public class TripRequest {
     public int getUserId() {
         return user_id;
     }
-    public void setUserId(int id) {
-        this.user_id = id;
-    }
 
     public int getTripId() {
         return trip_id;
-    }
-    public void setTripId(int id) {
-        this.trip_id = id;
     }
 
     public String getUserName() {
         return name;
     }
-    public void setUserName(String name) {
-        this.name = name;
-    }
 
     public String getImageUrl() {
         return imageUrl;
     }
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public String getStatus() {
         return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getSource() {
@@ -186,4 +184,6 @@ public class TripRequest {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
+    public String getType() {return type;}
 }

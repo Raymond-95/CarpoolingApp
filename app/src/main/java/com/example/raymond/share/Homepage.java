@@ -16,11 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.raymond.share.addGuardian.AddGuardian;
 import com.example.raymond.share.chat.ChatUsers;
 import com.example.raymond.share.model.User;
 import com.example.raymond.share.notifications.NotificationList;
 import com.example.raymond.share.tripList.DriverFragment;
 import com.example.raymond.share.tripList.PassengerFragment;
+import com.example.raymond.share.tripList.Search;
 import com.example.raymond.share.tripList.TripHistory;
 import com.facebook.login.LoginManager;
 
@@ -46,11 +48,22 @@ public class Homepage extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        user = new User().getUserAccount(getApplicationContext());
+
         ImageView notification = (ImageView) findViewById(R.id.notification);
         notification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), NotificationList.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView search = (ImageView) findViewById(R.id.search);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Search.class);
                 startActivity(intent);
             }
         });
@@ -101,6 +114,10 @@ public class Homepage extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "My carpools Selected", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), TripHistory.class));
                         return true;
+                    case R.id.guardians:
+                        Toast.makeText(getApplicationContext(), "Guardians Selected", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), AddGuardian.class));
+                        return true;
                     case R.id.messages:
                         Toast.makeText(getApplicationContext(), "Messages Selected", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), ChatUsers.class));
@@ -147,8 +164,6 @@ public class Homepage extends AppCompatActivity {
 
         View menuHeader =  navigationView.getHeaderView(0);
 
-        user = new User().getUserAccount(getApplicationContext());
-
         TextView nameView = (TextView) menuHeader.findViewById(R.id.username);
         nameView.setText(user.getName());
 
@@ -170,6 +185,5 @@ public class Homepage extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        user = null;
     }
 }

@@ -13,7 +13,7 @@ import org.parceler.Parcel;
 @Parcel
 public class Trip {
     int id;
-    String source, destination, information, role, date, time, status;
+    String source, destination, information, role, date, time, status, distance, duration;
     String user_name, imageUrl;
     int user_id;
 
@@ -28,6 +28,18 @@ public class Trip {
         this.information = information;
         this.role = role;
         this.status = status;
+    }
+
+    public Trip(int id, String source, String destination, String date, String user_name, String imageUrl, String status, String distance, String duration){
+        this.id = id;
+        this.source = source;
+        this.destination = destination;
+        this.date = date;
+        this.user_name = user_name;
+        this.imageUrl = imageUrl;
+        this.status = status;
+        this.distance = distance;
+        this.duration = duration;
     }
 
     public Trip(int id, String source, String destination, String date, String time, String information, String role, String status, int user_id, String user_name, String imageUrl){
@@ -115,6 +127,17 @@ public class Trip {
                 Log.d(getClass().getName(), "Image Url is null");
             }
 
+            try {
+                this.distance = response.getString("distance");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Distance is null");
+            }
+
+            try {
+                this.duration = response.getString("duration");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Duration is null");
+            }
 
         } catch (JSONException ex) {
 
@@ -183,6 +206,18 @@ public class Trip {
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "Image Url is null");
             }
+
+            try {
+                this.distance = response.getString("distance");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Distance is null");
+            }
+
+            try {
+                this.duration = response.getString("duration");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Duration is null");
+            }
         }
     }
 
@@ -211,20 +246,19 @@ public class Trip {
     public void setTime(String time) { this.time = time; }
 
     public String getInformation() {return information; }
-    public void setInformation(String information) { this.information = information; }
 
     public String getRole() {return role; }
     public void setRole(String role) { this.role = role; }
 
     public String getStatus() {return status; }
-    public void setStatus(String status) { this.status = status; }
 
     public int getUserId() {return user_id; }
-    public void setUserId(int user_id) { this.user_id = user_id; }
-
     public String getName() {return user_name; }
     public void setName(String user_name) { this.user_name = user_name; }
 
     public String getImageUrl() {return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getDistance() {return distance; }
+
+    public String getDuration() {return duration; }
 }
