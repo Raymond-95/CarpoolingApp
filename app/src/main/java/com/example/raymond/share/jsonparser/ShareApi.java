@@ -405,6 +405,42 @@ public class ShareApi {
 
             return this;
         }
+
+        public Builder alertGuardian(
+                int recipient,
+                double start_lat,
+                double start_lng,
+                double current_lat,
+                double current_lng
+        ) {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/notification/alert_guardian");
+
+            mClient.addParam("recipient", recipient);
+            mClient.addParam("start_lat", start_lat);
+            mClient.addParam("start_lng", start_lng);
+            mClient.addParam("current_lat", current_lat);
+            mClient.addParam("current_lng", current_lng);
+
+            return this;
+        }
+
+        public Builder rating(
+                int rate,
+                int rate_to,
+                int trip_id
+        ) {
+            mClient.setExitWhen401(false);
+            mClient.setMethod(ShareRestClient.POST);
+            mClient.setEndPoint("/trip/rating");
+
+            mClient.addParam("rate", rate);
+            mClient.addParam("rate_to", rate_to);
+            mClient.addParam("trip_id", trip_id);
+
+            return this;
+        }
     }
 }
 

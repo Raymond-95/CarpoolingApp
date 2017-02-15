@@ -41,8 +41,6 @@ public class Message extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         String pass_id = getIntent().getStringExtra("id");
         id = Integer.parseInt(pass_id);
 

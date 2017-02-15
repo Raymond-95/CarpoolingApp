@@ -131,6 +131,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.ViewHolder> {
                 item_status.setImageResource(R.drawable.cross);
                 item_status.setVisibility(View.VISIBLE);
             }
+            else if (currentTrip.getStatus().equals("completed")){
+                item_status.setImageResource(R.drawable.thumup);
+                item_status.setVisibility(View.VISIBLE);
+            }
         }
     }
 

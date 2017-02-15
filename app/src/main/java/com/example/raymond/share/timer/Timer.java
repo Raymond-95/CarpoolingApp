@@ -1,8 +1,8 @@
 package com.example.raymond.share.timer;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,15 +11,21 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.raymond.share.Homepage;
 import com.example.raymond.share.R;
+import com.example.raymond.share.jsonparser.ShareApi;
+import com.example.raymond.share.jsonparser.ShareJSON;
+
+import org.json.JSONObject;
 
 public class Timer extends Activity {
 
@@ -56,22 +62,21 @@ public class Timer extends Activity {
     //Thread for chronometer
     Thread mThreadChrono;
 
-    //Reference to the MainActivity (this class!)
     Context mContext;
 
-    GPSTracker gps;
-
-    private PendingIntent mPingAlarmPendIntent;
-    private static final String PING_ALARM = "com.sithagi.PING_ALARM";
-    private Intent mPingAlarmIntent = new Intent(PING_ALARM);
-    private BroadcastReceiver mPingAlarmReceiver;
-    private double current_lat;
-    private double curent_lng;
+    private static int recipient;
+    private int count;
+    private double start_lat;
+    private double start_lng;
+    private AlarmManager manager;
+    private PendingIntent pendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+
+        recipient = getIntent().getIntExtra("recipient", 0);
 
         //Instantiating all member variables
 
@@ -87,7 +92,7 @@ public class Timer extends Activity {
             @Override
             public void onClick(View v) {
                 //if the chronometer has not been instantiated before...
-
+                count = 0;
                 if (mChrono == null) {
                     //instantiate the chronometer
                     mChrono = new Chronometer(mContext);
@@ -102,23 +107,23 @@ public class Timer extends Activity {
                     mLapCounter = 1;
                 }
 
-                // create class object
-                gps = new GPSTracker(Timer.this);
+                GPSTracker gps;
+
+                gps = new GPSTracker(getApplicationContext());
 
                 // check if GPS enabled
                 if(gps.canGetLocation()){
 
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
-
-                    // \n is for new line
-                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+                    start_lat = gps.getLatitude();
+                    start_lng = gps.getLongitude();
                 }else{
                     // can't get location
                     // GPS or Network is not enabled
                     // Ask user to enable GPS/network in settings
                     gps.showSettingsAlert();
                 }
+
+                startAlarm(recipient);
 
                 mBtn_start.setVisibility(View.GONE);
                 mBtn_end.setVisibility(View.VISIBLE);
@@ -132,7 +137,6 @@ public class Timer extends Activity {
             public void onClick(View v) {
                 //if the chronometer has not been instantiated before...
 
-                if (mChrono != null) {
                     //stop the chronometer
                     mChrono.stop();
                     //stop the thread
@@ -141,8 +145,9 @@ public class Timer extends Activity {
                     //kill the chrono class
                     mChrono = null;
 
+                    manager.cancel(pendingIntent);
+
                     popUpWindow();
-                }
             }
         });
     }
@@ -182,8 +187,9 @@ public class Timer extends Activity {
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                rating();
+                ratingPop();
                 dialog.dismiss();
+                mTvTimer.setText("00:00:00");
             }
         });
 
@@ -191,7 +197,7 @@ public class Timer extends Activity {
         dialog.show();
     }
 
-    public void rating() {
+    public void ratingPop() {
 
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(Timer.this);
         View root = ((LayoutInflater) Timer.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.rating, null);
@@ -205,6 +211,7 @@ public class Timer extends Activity {
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
+                rating(rating.getNumStars(), recipient, getIntent().getIntExtra("trip_id", 0));
                 dialog.dismiss();
             }
         });
@@ -212,6 +219,7 @@ public class Timer extends Activity {
         mBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
+                rating(0, recipient, getIntent().getIntExtra("trip_id", 0));
                 dialog.dismiss();
             }
         });
@@ -335,5 +343,51 @@ public class Timer extends Activity {
         if(!oldTvTimerText.isEmpty()){
             mTvTimer.setText(oldTvTimerText);
         }
+    }
+
+    private void startAlarm(int recipient) {
+
+        Intent myIntent;
+
+        myIntent = new Intent(Timer.this, AlarmGPS.class);
+        myIntent.putExtra("recipient", recipient);
+        myIntent.putExtra("count", Integer.toString(count));
+        if (count == 0){
+            myIntent.putExtra("start_lat", start_lat);
+            myIntent.putExtra("start_lng", start_lng);
+        }
+
+        pendingIntent = PendingIntent.getBroadcast(this,0,myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime()+3000,5000,pendingIntent);
+
+        count = 1;
+    }
+
+    public void rating(int rate, int rate_to, int trip_id) {
+
+        ShareApi.init(this)
+                .rating(
+                        rate,
+                        rate_to,
+                        trip_id
+                ).call(
+                        new ShareApi.DialogResponseHandler(){
+
+                            @Override
+                            public void onSuccess(JSONObject response, ShareJSON meta){
+
+                                Intent intent = new Intent(getApplicationContext(), Homepage.class);
+                                startActivity(intent);
+
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(Throwable e, JSONObject response, ShareJSON meta){
+                                Log.e("Error", "Rating failed!");
+                            }
+                        }
+                );
     }
 }

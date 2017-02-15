@@ -7,17 +7,17 @@ import com.example.raymond.share.jsonparser.Share;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by jiaminglow on 4/19/16.
  */
 
-import org.parceler.Parcel;
-
 @Parcel
 public class User {
     int id;
     String email, name, phonenum, profileUrl, imageUrl, role,token;
+    double rate;
 
     public User(){}
 
@@ -30,6 +30,18 @@ public class User {
         this.imageUrl = imageUrl;
         this.role = role;
         this.token = token;
+    }
+
+    public User(int id, String email, String name, String phonenum, String profileUrl, String imageUrl, String role, String token, double rate){
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.phonenum = phonenum;
+        this.profileUrl = profileUrl;
+        this.imageUrl = imageUrl;
+        this.role = role;
+        this.token = token;
+        this.rate = rate;
     }
 
     public User(JSONObject response){
@@ -82,7 +94,13 @@ public class User {
             try {
                 this.token = response.getString("token");
             } catch (JSONException e) {
-                Log.d(getClass().getName(), "token is null");
+                Log.d(getClass().getName(), "Token is null");
+            }
+
+            try {
+                this.rate = response.getDouble("rate");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Rate is null");
             }
 
         } catch (JSONException ex) {
@@ -134,6 +152,12 @@ public class User {
             } catch (JSONException e) {
                 Log.d(getClass().getName(), "token is null");
             }
+
+            try {
+                this.rate = response.getDouble("rate");
+            } catch (JSONException e) {
+                Log.d(getClass().getName(), "Rate is null");
+            }
         }
     }
 
@@ -159,12 +183,10 @@ public class User {
     }
 
     public String getProfileUrl() { return profileUrl; }
-    public void setProfileUrl(String profileUrl) { this.profileUrl = profileUrl; }
 
     public String getImageUrl() {
         return imageUrl;
     }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public String getRole() {
         return role;
@@ -173,6 +195,8 @@ public class User {
 
     public String getToken() {return token; }
     public void setToken(String token) { this.token = token; }
+
+    public double getRate() {return rate;}
 
     public void saveUserAccount(Context context){
 

@@ -152,6 +152,8 @@ public class TripDetail extends AppCompatActivity {
                                 public void onClick(View view) {
 
                                     Intent intent = new Intent(getApplicationContext(), Timer.class);
+                                    intent.putExtra("recipient", tripInfo.getUserId());
+                                    intent.putExtra("trip_id", tripInfo.getId());
                                     startActivity(intent);
 
                                 }

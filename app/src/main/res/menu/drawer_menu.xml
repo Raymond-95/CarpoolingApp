@@ -11,7 +11,7 @@
 
         <item
             android:id="@+id/mycarpools"
-            android:title="My Carpool"
+            android:title="My Carpools"
             android:icon="@drawable/mycarpools">
         </item>
 

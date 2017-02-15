@@ -2,7 +2,6 @@ package com.example.raymond.share;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,15 +41,14 @@ public class EditTrip extends AppCompatActivity {
     private static EditText trip_time;
     private static TextView role;
     private static EditText information;
-    private static Calendar calendar = Calendar.getInstance();
+    private static Calendar calendar;
     private static String internationalTime;
     private static String getRole;
     private static String date = "";
     private int id;
-    private int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    private int minute = calendar.get(Calendar.MINUTE);
+    private int hour;
+    private int minute;
     private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.editTrip";
 
     @Override
@@ -70,6 +68,10 @@ public class EditTrip extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        calendar = Calendar.getInstance();
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
 
         source = (EditText) findViewById(R.id.source);
         destination = (EditText) findViewById(R.id.destination);
@@ -226,6 +228,9 @@ public class EditTrip extends AppCompatActivity {
                         trip_time.setText(tripInfo.getTime());
                         role.setText((tripInfo.getRole()));
                         information.setText(tripInfo.getInformation());
+
+                        date = tripInfo.getDate();
+                        internationalTime = tripInfo.getTime();
                     }
                     @Override
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
@@ -237,8 +242,7 @@ public class EditTrip extends AppCompatActivity {
 
     private void updateTrip(int id, String source, String destination, String date, String time, String role, String information){
 
-        mProgressDialog = ShareApi.init(this)
-                .setProgressDialog(mProgressDialog)
+        ShareApi.init(this)
                 .updateTrip(
                         id,
                         source,
@@ -264,9 +268,7 @@ public class EditTrip extends AppCompatActivity {
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
                     }
 
-                })
-                .keepProgressDialog()
-                .getProgressDialog();
+                });
     }
 
     @Override
@@ -303,13 +305,13 @@ public class EditTrip extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            trip_date.setText( day + "-" + month + 1 + "-" + year);
 
             if (month+1 == 0)
                 month = 12;
             else
                 month = month+1;
 
+            trip_date.setText( day + "-" + month + "-" + year);
             date = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
         }
     }

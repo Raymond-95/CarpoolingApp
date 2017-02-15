@@ -2,7 +2,6 @@ package com.example.raymond.share;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,14 +39,13 @@ public class RegTrip extends AppCompatActivity {
     private TextView role;
     private EditText information;
     private TextView create;
-    private Calendar calendar = Calendar.getInstance();
+    private Calendar calendar;
     private String internationalTime;
     private String getRole;
     private static String date = "";
-    private int hour = calendar.get(Calendar.HOUR_OF_DAY);
-    private int minute = calendar.get(Calendar.MINUTE);
+    private int hour;
+    private int minute;
     private static int PLACE_PICKER_REQUEST = 1;
-    ProgressDialog mProgressDialog;
     private static final String TAG = "share.activity.reg_trip";
 
     @Override
@@ -67,6 +65,10 @@ public class RegTrip extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        calendar = Calendar.getInstance();
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
 
         source = (EditText) findViewById(R.id.source);
 
@@ -210,7 +212,7 @@ public class RegTrip extends AppCompatActivity {
 
     private void registerTrip(String source, String destination, String date, String time, String role, String information){
 
-        mProgressDialog = ShareApi.init(this)
+        ShareApi.init(this)
                 .registerTrip(
                         source,
                         destination,
@@ -235,9 +237,7 @@ public class RegTrip extends AppCompatActivity {
                     public void onFailure(Throwable e, JSONObject response, ShareJSON meta) {
                     }
 
-                })
-                .keepProgressDialog()
-                .getProgressDialog();
+                });
     }
 
     @Override
@@ -267,13 +267,13 @@ public class RegTrip extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            trip_date.setText( day + "-" + month + 1 + "-" + year);
 
             if (month+1 == 0)
                 month = 12;
             else
                 month = month+1;
 
+            trip_date.setText( day + "-" + month + "-" + year);
             date = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
         }
     }
@@ -296,7 +296,6 @@ public class RegTrip extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mProgressDialog = null;
         trip_date = null;
         date = null;
     }
